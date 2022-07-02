@@ -17,8 +17,8 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Margin="0,25,0,5" >
             <TextBox Padding="5" HorizontalAlignment="Center" BorderThickness="0" BorderBrush="Transparent" FontSize="{ThemeResource TitleTextBlockFontSize}" Background="Transparent" TextChanged="txtServerName_TextChanged" FontWeight="SemiBold" x:Name="txtServerName"/>
-            <Button Padding="7" HorizontalAlignment="Right">
-                <FontIcon Glyph="&#xe946;"/>
+            <Button Padding="7" Margin="0,0,5,0" HorizontalAlignment="Right">
+                <FontIcon FontSize="11" Glyph="&#xe946;"/>
                 <Button.Flyout>
                     <Flyout>
                         <Grid>

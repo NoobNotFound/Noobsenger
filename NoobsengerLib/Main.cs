@@ -230,7 +230,7 @@ namespace NoobsengerLib
 
             byte[] outStream = DataEncoder.DataToByteArray(data);
 
-            serverStream.Write(outStream);
+            serverStream.Write(outStream, 0, outStream.Length);
 
             serverStream.Flush();
         }
@@ -253,18 +253,18 @@ namespace NoobsengerLib
                     var returndata = DataEncoder.ByteArrayToData(inStream);
                     if (returndata.DataType == DataType.Chat)
                     {
-                        ChatRecieved.Invoke(returndata.ClientName, returndata);
+                        ChatRecieved?.Invoke(returndata.ClientName, returndata);
                     }
                     else if (returndata.DataType == DataType.InfoMessage)
                     {
                         if (returndata.InfoCode == InfoCodes.ServerNameReceived)
                         {
                             this.ServerName = returndata.Message;
-                            ServerNameChanged.Invoke(this, new EventArgs());
+                            ServerNameChanged?.Invoke(this, new EventArgs());
                         }
                         else if (returndata.InfoCode == InfoCodes.Join)
                         {
-                            ChatRecieved.Invoke(returndata.ClientName, returndata);
+                            ChatRecieved?.Invoke(returndata.ClientName, returndata);
                         }
                     }
                 }
