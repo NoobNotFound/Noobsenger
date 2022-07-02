@@ -1,0 +1,59 @@
+﻿<Page
+    x:Class="Noobsenger.Views.JoinPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Noobsenger.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid>
+        <StackPanel
+			Padding="20"
+			CornerRadius="10"
+			Background="{ThemeResource LayerFillColorDefaultBrush}"
+			VerticalAlignment="Center"
+			HorizontalAlignment="Center">
+            <TextBlock
+				FontSize="32"
+				Style="{StaticResource TitleTextBlockStyle}"
+				Text="Join a server" />
+            <TextBlock
+				TextWrapping="WrapWholeWords"
+				Margin="0,10"
+				Text="Choose the IP and the port of your server, and join." />
+            <StackPanel
+				Orientation="Horizontal">
+                <TextBlock
+					Text="IP: "
+					Width="100"
+					VerticalAlignment="Center" />
+                <ComboBox
+                    IsEditable="True"
+					MinWidth="100"
+					x:Name="cmbxIps" />
+            </StackPanel>
+            <StackPanel
+				Margin="0,5,0,0"
+				Orientation="Horizontal">
+                <TextBlock
+					Text="Port: "
+					VerticalAlignment="Center"
+					Width="100" />
+                <NumberBox
+                    x:Name="nbrPort"
+					SpinButtonPlacementMode="Compact"
+					MinWidth="100"
+					Maximum="49151"
+					Minimum="1024" />
+            </StackPanel>
+            <TextBlock Margin="0,5,0,0" x:Name="txtInfo" Foreground="{ThemeResource SystemErrorTextColor}" Visibility="Collapsed" />
+            <Button
+                Margin="10"
+                Content="Join"
+                Click="Button_Click"
+				Style="{ThemeResource AccentButtonStyle}"
+				HorizontalAlignment="Center" />
+        </StackPanel>
+    </Grid>
+</Page>

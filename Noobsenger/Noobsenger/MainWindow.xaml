@@ -1,0 +1,41 @@
+﻿<Window
+    x:Class="Noobsenger.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Noobsenger"
+    Closed="Window_Closed"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uc="using:Noobsenger.UserControls" xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
+    mc:Ignorable="d">
+    <Grid>
+        <Button 
+            Width="45" 
+            x:Name="btnFrameBack" 
+            Visibility="Collapsed" 
+            VerticalAlignment="Top" 
+            HorizontalAlignment="Left" 
+            Padding="10" 
+            CornerRadius="0,0,5,0" 
+            Background="Transparent" 
+            BorderBrush="Transparent"
+            Click="btnFrameBack_Click">
+            <AnimatedIcon 
+                x:Name="SearchAnimatedIcon">
+                <AnimatedIcon.Source>
+                    <animatedvisuals:AnimatedBackVisualSource/>
+                </AnimatedIcon.Source>
+                <AnimatedIcon.FallbackIconSource>
+                    <SymbolIconSource Symbol="Find"/>
+                </AnimatedIcon.FallbackIconSource>
+            </AnimatedIcon>
+
+        </Button>
+        <uc:TitleBar 
+            Margin="12,0,0,0" 
+            VerticalAlignment="Top" 
+            x:Name="AppTitleBar"/>
+        <Frame 
+            x:Name="MainFrame"/>
+    </Grid>
+</Window>

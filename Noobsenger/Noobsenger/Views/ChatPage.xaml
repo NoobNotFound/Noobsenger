@@ -1,0 +1,109 @@
+﻿<Page
+    x:Class="Noobsenger.Views.ChatPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Noobsenger.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:helpers="using:Noobsenger.Helpers"
+    Loaded="Page_Loaded">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Margin="0,25,0,5" >
+            <TextBox Padding="5" HorizontalAlignment="Center" BorderThickness="0" BorderBrush="Transparent" FontSize="{ThemeResource TitleTextBlockFontSize}" Background="Transparent" TextChanged="txtServerName_TextChanged" FontWeight="SemiBold" x:Name="txtServerName"/>
+            <Button Padding="7" HorizontalAlignment="Right">
+                <FontIcon Glyph="&#xe946;"/>
+                <Button.Flyout>
+                    <Flyout>
+                        <Grid>
+                            <StackPanel>
+                                <TextBlock FontSize="18" FontWeight="SemiBold" Text="Server Info"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                    <TextBlock Text="IP:" Width="50"/>
+                                    <TextBlock x:Name="txtIP" TextTrimming="CharacterEllipsis" Width="120" Margin="5,0"/>
+                                    <Button x:Name="btnCopyIP" Click="btnCopyIP_Click" Padding="7" ToolTipService.ToolTip="Copy">
+                                        <FontIcon Glyph="&#xe8c8;"/>
+                                    </Button>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                    <TextBlock Text="Port:" Width="50"/>
+                                    <TextBlock x:Name="txtPort" Width="120" Margin="5,0"/>
+                                    <Button x:Name="btnCopyPort" Click="btnCopyPort_Click" Padding="7" ToolTipService.ToolTip="Copy">
+                                        <FontIcon Glyph="&#xe8c8;"/>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+        </Grid>
+        <ListView SelectionMode="None" VerticalAlignment="Stretch" Grid.Row="1" x:Name="ChatView">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView"
+                              VerticalAlignment="Bottom"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplateSelector>
+                <helpers:ChatItemTemplateSelector>
+                    <helpers:ChatItemTemplateSelector.InfoTemplate>
+                        <DataTemplate x:DataType="helpers:InfoItem">
+                            <Grid Background="{ThemeResource LayerFillColorDefaultBrush}" HorizontalAlignment="Center" Padding="20,10">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock FontSize="12" HorizontalAlignment="Center" Text="{x:Bind Time.ToShortTimeString()}"/>
+                                    <TextBlock Text="{x:Bind Info}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </helpers:ChatItemTemplateSelector.InfoTemplate>
+                    <helpers:ChatItemTemplateSelector.MessageTemplate>
+                        <DataTemplate x:DataType="helpers:MessageItem">
+                            <Grid Margin="5,10" HorizontalAlignment="Stretch">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0" HorizontalAlignment="Left">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Source="{x:Bind Avatar,Mode=OneWay}" Width="40" Stretch="Uniform" Grid.Column="0"/>
+                                    <TextBlock Text="{x:Bind From,Mode=OneWay}" VerticalAlignment="Center" FontSize="20" Margin="5,0" Grid.Column="1"/>
+                                    <TextBlock Text="{x:Bind Time.ToShortTimeString(),Mode=OneWay}" VerticalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="5,0" Grid.Column="2"/>
+                                </Grid>
+                                <Grid Grid.Row="1" Margin="0,5,0,0">
+                                    <TextBlock Text="{x:Bind Message,Mode=OneWay}" TextWrapping="WrapWholeWords"/>
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </helpers:ChatItemTemplateSelector.MessageTemplate>
+                </helpers:ChatItemTemplateSelector>
+            </ListView.ItemTemplateSelector>
+        </ListView>
+
+        <Grid Margin="5" MinHeight="75" Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox MaxHeight="400" x:Name="txtMessage" Grid.Column="0" AcceptsReturn="True" IsSpellCheckEnabled="True" HorizontalAlignment="Stretch"/>
+            <Button VerticalAlignment="Stretch" Margin="5,0,0,0" x:Name="btnSend" Click="btnSend_Click" Grid.Column="1">
+                <FontIcon FontSize="{ThemeResource TitleTextBlockFontSize}" FontWeight="SemiBold" Glyph="&#xe724;"/>
+            </Button>
+        </Grid>
+    </Grid>
+</Page>

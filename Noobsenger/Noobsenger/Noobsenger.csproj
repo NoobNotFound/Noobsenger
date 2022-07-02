@@ -1,0 +1,86 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>Noobsenger</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Platforms>x86;x64;arm64</Platforms>
+    <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
+    <UseWinUI>true</UseWinUI>
+    <ApplicationIcon>image.ico</ApplicationIcon>
+  </PropertyGroup>
+	<ItemGroup>
+		<Content Include="Images\icon.png" />
+	</ItemGroup>
+  <ItemGroup>
+    <None Remove="UserControls\TitleBar.xaml" />
+    <None Remove="Views\ChatPage.xaml" />
+    <None Remove="Views\HostPage.xaml" />
+    <None Remove="Views\JoinPage.xaml" />
+    <None Remove="Views\Login.xaml" />
+    <None Remove="Views\WelcomePage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="image.ico" />
+  </ItemGroup>
+	<ItemGroup>
+		<Content Include="Images\Avatars\Boy.png" />
+		<Content Include="Images\Avatars\Gamer.png" />
+		<Content Include="Images\Avatars\Girl.png" />
+		<Content Include="Images\Avatars\Man.png" />
+		<Content Include="Images\Avatars\Man2.png" />
+		<Content Include="Images\Avatars\Man3.png" />
+		<Content Include="Images\Avatars\Nerd.png" />
+		<Content Include="Images\Avatars\Sir.png" />
+		<Content Include="Images\Avatars\MaskedMan.png" />
+		<Content Include="Images\Avatars\Woman.png" />
+		<Content Include="Images\Avatars\Woman1.png" />
+		<Content Include="Images\Avatars\Woman2.png" />
+	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.2" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.1" />
+    <Manifest Include="$(ApplicationManifest)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\NoobsengerLib\NoobsengerLib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\WelcomePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\Login.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\JoinPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\HostPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\ChatPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UserControls\TitleBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+</Project>
