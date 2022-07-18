@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using static NoobsengerLib.AvatarManager;
+using static Noobsenger.Core.AvatarManager;
 
 namespace Noobsenger.Helpers
 {

@@ -1,5 +1,4 @@
-﻿using Microsoft.UI.Xaml.Media.Imaging;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +7,6 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Storage;
-using Windows.Storage.Streams;
 
 namespace NoobsengerLib
 {
@@ -108,7 +103,7 @@ namespace NoobsengerLib
                 clientSocket = ServerSocket.AcceptTcpClient();
 
                 byte[] bytesFrom = new byte[10024];
-                ByteData dataFromClient;
+                ChatData dataFromClient;
 
                 NetworkStream networkStream = clientSocket.GetStream();
                 networkStream.Read(bytesFrom);
@@ -138,11 +133,11 @@ namespace NoobsengerLib
                 TcpClient broadcastSocket;
                 broadcastSocket = (TcpClient)Item.Value;
                 NetworkStream broadcastStream = broadcastSocket.GetStream();
-                Byte[] broadcastBytes;
+                byte[] broadcastBytes;
 
-                broadcastBytes = DataEncoder.DataToByteArray(new ByteData(uName, msg, avatar: avatar, uploads: uploads, dataType: type, infoCode: MsgCode));
+                broadcastBytes = DataEncoder.DataToByteArray(new ChatData(uName, msg, avatar: avatar, uploads: uploads, dataType: type, infoCode: MsgCode));
 
-                broadcastStream.Write(broadcastBytes);
+                broadcastStream.Write(broadcastBytes,0,broadcastBytes.Length);
                 broadcastStream.Flush();
             }
         }
@@ -150,7 +145,7 @@ namespace NoobsengerLib
         {
             NetworkStream broadcastStream = broadcastSocket.GetStream();
             Byte[] broadcastBytes;
-            broadcastBytes = DataEncoder.DataToByteArray(new ByteData(uName, msg, avatar: avatar, uploads: uploads, dataType: type, infoCode: MsgCode));
+            broadcastBytes = DataEncoder.DataToByteArray(new ChatData(uName, msg, avatar: avatar, uploads: uploads, dataType: type, infoCode: MsgCode));
             broadcastStream.Write(broadcastBytes);
             broadcastStream.Flush();
         }
@@ -173,7 +168,7 @@ namespace NoobsengerLib
             {
                 int requestCount = 0;
                 byte[] bytesFrom = new byte[10025];
-                ByteData dataFromClient = null;
+                ChatData dataFromClient = null;
                 string rCount = null;
                 requestCount = 0;
 
@@ -201,8 +196,8 @@ namespace NoobsengerLib
     }
     public class Client
     {
-        public event EventHandler<ByteData>? ChatRecieved;
-        public event TypedEventHandler<Client, EventArgs>? ServerNameChanged;
+        public event EventHandler<ChatData>? ChatRecieved;
+        public event EventHandler? ServerNameChanged;
         private TcpClient clientSocket = new TcpClient();
         private NetworkStream serverStream = default;
         public string UserName { get; set; }
@@ -215,7 +210,7 @@ namespace NoobsengerLib
             this.UserName = userName;
             this.Avatar = avatar;
             Avatar = avatar;
-            byte[] outStream = DataEncoder.DataToByteArray(new ByteData(UserName, "", avatar, null, DataType.InfoMessage, InfoCodes.Join));
+            byte[] outStream = DataEncoder.DataToByteArray(new ChatData(UserName, UserName, avatar, null, DataType.InfoMessage, InfoCodes.Join));
 
             serverStream.Write(outStream);
 
@@ -225,7 +220,7 @@ namespace NoobsengerLib
 
             ctThread.Start();
         }
-        public void SendMessage(ByteData data)
+        public void SendMessage(ChatData data)
         {
 
             byte[] outStream = DataEncoder.DataToByteArray(data);
@@ -248,7 +243,7 @@ namespace NoobsengerLib
 
                     buffSize = clientSocket.ReceiveBufferSize;
 
-                    serverStream.Read(inStream);
+                    serverStream.Read(inStream, 0, inStream.Length);
 
                     var returndata = DataEncoder.ByteArrayToData(inStream);
                     if (returndata.DataType == DataType.Chat)

@@ -26,15 +26,15 @@ namespace Noobsenger.Views
         public JoinPage()
         {
             this.InitializeComponent();
-            cmbxIps.ItemsSource = NoobsengerLib.Util.GetIPAddresses();
+            cmbxIps.ItemsSource = Noobsenger.Core.Util.GetIPAddresses();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (NoobsengerLib.Util.ParseIPAddress(cmbxIps.Text.ToString()) != null && nbrPort.Value > 1023 && nbrPort.Value < 49152)
+            if (Noobsenger.Core.Util.ParseIPAddress(cmbxIps.Text.ToString()) != null && nbrPort.Value > 1023 && nbrPort.Value < 49152)
             {
-                NoobsengerLib.Server.IP = NoobsengerLib.Util.ParseIPAddress(cmbxIps.Text.ToString());
-                NoobsengerLib.Server.Port = Convert.ToInt32(nbrPort.Value);
+                Noobsenger.Core.Server.IP = Noobsenger.Core.Util.ParseIPAddress(cmbxIps.Text.ToString());
+                Noobsenger.Core.Server.Port = Convert.ToInt32(nbrPort.Value);
                 MainWindow.DisableGoBack = true;
                 MainWindow.NavigateFrame(typeof(ChatPage));
             }

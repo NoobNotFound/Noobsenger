@@ -12,7 +12,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using NoobsengerLib;
+using Noobsenger.Core;
 using Noobsenger.Helpers;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -32,47 +32,38 @@ namespace Noobsenger.Views
         public ChatPage()
         {
             this.InitializeComponent();
-            Client = new Client();
-            Messages = new ObservableCollection<Message>();
-            if (Server.IsHosted)
-            {
-                txtServerName.IsReadOnly = false;
-                txtServerName.Text = Server.ServerName;
-            }
-            else
-            {
-                txtServerName.IsReadOnly = true;
-                Client.ServerNameChanged += Client_ServerNameChanged;
-            }
-            txtIP.Text = Server.IP.ToString();
-            txtPort.Text = Server.Port.ToString();
-            Client.ChatRecieved += Client_ChatRecieved;
-            ChatView.ItemsSource = Messages;
-            txtMessage.Focus(FocusState.Programmatic);
         }
-
-        private void Client_ChatRecieved(object sender, ByteData e)
+        int msgCount = 0;
+        private void Client_ChatRecieved(object sender, ChatData e)
         {
             DispatcherQueue.TryEnqueue(async () =>
             {
                 if (e.DataType == DataType.Chat)
                 {
-                    Messages.Add(new MessageItem { Avatar = await AvatarUtil.AvatarToBitmap(e.Avatar), From = e.ClientName, Message = e.Message, Time = DateTime.Now });
+                    if (e.ClientName == Client.UserName)
+                    {
+                        Messages.Add(new MessageItem { Avatar = await AvatarUtil.AvatarToBitmap(e.Avatar), From = e.ClientName, Message = e.Message, Time = DateTime.Now,Sender = MessageSender.Me, Count = msgCount });
+                    }
+                    else
+                    {
+                        Messages.Add(new MessageItem { Avatar = await AvatarUtil.AvatarToBitmap(e.Avatar), From = e.ClientName, Message = e.Message, Time = DateTime.Now, Sender = MessageSender.Other, Count = msgCount });
+                    }
                 }
                 else if (e.DataType == DataType.InfoMessage)
                 {
                     if (e.InfoCode == InfoCodes.Join)
                     {
-                        Messages.Add(new InfoItem { Info = e.Message, Time = DateTime.Now });
+                        Messages.Add(new InfoItem { Info = e.Message, Time = DateTime.Now,Count = msgCount });
                     }
                 }
+                msgCount++;
             });
         }
 
-        private void Client_ServerNameChanged(Client sender, EventArgs args)
+        private void Client_ServerNameChanged(object sender, EventArgs args)
         {
 
-            DispatcherQueue.TryEnqueue(() => txtServerName.Text = Client.ServerName);
+            DispatcherQueue.TryEnqueue(() => txtServerName.Text = ((Client)sender).ServerName);
         }
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
@@ -96,15 +87,35 @@ namespace Noobsenger.Views
 
         private void Login(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
+            Client = new Client();
+            Messages = new ObservableCollection<Message>();
+            if (Server.IsHosted)
+            {
+                txtServerName.IsReadOnly = false;
+                txtServerName.Text = Server.ServerName;
+            }
+            else
+            {
+                txtServerName.IsReadOnly = true;
+                Client.ServerNameChanged += Client_ServerNameChanged;
+            }
+            txtIP.Text = Server.IP.ToString();
+            txtPort.Text = Server.Port.ToString();
+            Client.ChatRecieved += Client_ChatRecieved;
+            ChatView.ItemsSource = Messages;
+            txtMessage.Focus(FocusState.Programmatic);
             Client.Connect(Server.IP, Server.Port, Views.Login.UserName, Views.Login.Avatar);
         }
 
-        private void btnSend_Click(object sender, RoutedEventArgs e)
+        private async void btnSend_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(txtMessage.Text.Replace("\n", "").Replace(" ", "")))
+            if (!string.IsNullOrWhiteSpace(txtMessage.Text))
             {
-                Client.SendMessage(new ByteData(Client.UserName, txtMessage.Text, Client.Avatar, dataType: DataType.Chat));
+                this.IsEnabled = false;
+                await Client.SendMessage(new ChatData(Client.UserName, txtMessage.Text, Client.Avatar, dataType: DataType.Chat));
                 txtMessage.Text = "";
+                this.IsEnabled = true;
+                txtMessage.Focus(FocusState.Programmatic);
             }
         }
 
@@ -138,6 +149,38 @@ namespace Noobsenger.Views
             var dataPackage = new DataPackage();
             dataPackage.SetText(Server.Port.ToString());
             Clipboard.SetContent(dataPackage);
+        }
+
+        private void mitDelmsg_Click(object sender, RoutedEventArgs e)
+        {
+            if(sender is MenuFlyoutItem mit)
+            {
+                foreach (var item in Messages)
+                {
+                    if(item.Count == int.Parse(mit.Tag.ToString()))
+                    {
+                        Messages.Remove(item);
+                        return;
+                    }
+                }
+            }
+        }
+
+        private void mitCopyMsg_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem mit)
+            {
+                foreach (var item in Messages)
+                {
+                    if (item.Count == int.Parse(mit.Tag.ToString()))
+                    {
+                        var dataPackage = new DataPackage();
+                        dataPackage.SetText(((MessageItem)item).Message);
+                        Clipboard.SetContent(dataPackage);
+                        return;
+                    }
+                }
+            }
         }
     }
 }

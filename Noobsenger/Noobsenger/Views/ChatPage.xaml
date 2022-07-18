@@ -60,9 +60,9 @@
                 <helpers:ChatItemTemplateSelector>
                     <helpers:ChatItemTemplateSelector.InfoTemplate>
                         <DataTemplate x:DataType="helpers:InfoItem">
-                            <Grid Background="{ThemeResource LayerFillColorDefaultBrush}" HorizontalAlignment="Center" Padding="20,10">
+                            <Grid CornerRadius="10" Background="{ThemeResource ControlStrokeColorOnAccentDefault}" Margin="0,10,0,0" HorizontalAlignment="Center" Padding="20,10">
                                 <StackPanel HorizontalAlignment="Center">
-                                    <TextBlock FontSize="12" HorizontalAlignment="Center" Text="{x:Bind Time.ToShortTimeString()}"/>
+                                    <TextBlock Foreground="{ThemeResource AppBarItemDisabledForegroundThemeBrush}" FontSize="12" HorizontalAlignment="Center" Text="{x:Bind Time.ToShortTimeString()}"/>
                                     <TextBlock Text="{x:Bind Info}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 </StackPanel>
                             </Grid>
@@ -70,7 +70,13 @@
                     </helpers:ChatItemTemplateSelector.InfoTemplate>
                     <helpers:ChatItemTemplateSelector.MessageTemplate>
                         <DataTemplate x:DataType="helpers:MessageItem">
-                            <Grid Margin="5,10" HorizontalAlignment="Stretch">
+                            <Grid CornerRadius="5" Padding="10" Margin="5,10,5,0" HorizontalAlignment="{x:Bind HorizontalAlignment}" Background="{x:Bind Background}">
+                                <Grid.ContextFlyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem Tag="{x:Bind Count}" Click="mitCopyMsg_Click" Text="Copy message"/>
+                                        <MenuFlyoutItem  Tag="{x:Bind Count}" Click="mitDelmsg_Click" Text="Delete message"/>
+                                    </MenuFlyout>
+                                </Grid.ContextFlyout>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="auto"/>
                                     <RowDefinition Height="*"/>
@@ -81,9 +87,9 @@
                                         <ColumnDefinition Width="auto"/>
                                         <ColumnDefinition Width="auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <Image Source="{x:Bind Avatar,Mode=OneWay}" Width="40" Stretch="Uniform" Grid.Column="0"/>
-                                    <TextBlock Text="{x:Bind From,Mode=OneWay}" VerticalAlignment="Center" FontSize="20" Margin="5,0" Grid.Column="1"/>
-                                    <TextBlock Text="{x:Bind Time.ToShortTimeString(),Mode=OneWay}" VerticalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="5,0" Grid.Column="2"/>
+                                    <Image Source="{x:Bind Avatar,Mode=OneWay}" Visibility="{x:Bind AvatarVisibility}" Width="40" Stretch="Uniform" Grid.Column="0"/>
+                                    <TextBlock Text="{x:Bind From,Mode=OneWay}" Visibility="{x:Bind AvatarVisibility}" VerticalAlignment="Center" FontSize="20" Margin="5,0" Grid.Column="1"/>
+                                    <TextBlock Text="{x:Bind Time.ToShortTimeString(),Mode=OneWay}" HorizontalAlignment="{x:Bind HorizontalAlignment}" VerticalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="5,0" Grid.Column="2"/>
                                 </Grid>
                                 <Grid Grid.Row="1" Margin="0,5,0,0">
                                     <TextBlock Text="{x:Bind Message,Mode=OneWay}" TextWrapping="WrapWholeWords"/>

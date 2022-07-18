@@ -18,7 +18,7 @@ using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Composition;
 using Noobsenger.Helpers;
 using Microsoft.UI;
-using NoobsengerLib;
+using Noobsenger.Core;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Windowing;
 // To learn more about WinUI, the WinUI project structure,
