@@ -1,5 +1,4 @@
-﻿using Microsoft.UI.Xaml.Media.Imaging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,7 +10,7 @@ using Newtonsoft.Json;
 namespace NoobsengerLib
 {
     [Serializable()]
-    public class ByteData
+    public class ChatData
     {
         public string ClientName { get; set; }
         public string Message { get; set; }
@@ -19,7 +18,7 @@ namespace NoobsengerLib
         public AvatarManager.Avatars Avatar { get; set; }
         public Uri[] Uploads { get; set; }
         public DataType DataType { get; set; }
-        public ByteData(string clientName = "", string message = "", AvatarManager.Avatars avatar = AvatarManager.Avatars.Gamer, Uri[] uploads = null, DataType dataType = DataType.Chat, string infoCode = null)
+        public ChatData(string clientName = "", string message = "", AvatarManager.Avatars avatar = AvatarManager.Avatars.Gamer, Uri[] uploads = null, DataType dataType = DataType.Chat, string infoCode = null)
         {
             ClientName = clientName;
             Message = message;
@@ -30,7 +29,7 @@ namespace NoobsengerLib
         }
     }
 
-    public class ByteDataString
+    public class ChatDataString
     {
         public string ClientName { get; set; }
         public string Message { get; set; }
@@ -47,9 +46,9 @@ namespace NoobsengerLib
     }
     public static class DataEncoder
     {
-        public static byte[] DataToByteArray(ByteData data)
+        public static byte[] DataToByteArray(ChatData data)
         {
-            ByteDataString byteData = new ByteDataString();
+            ChatDataString byteData = new ChatDataString();
             byteData.Avatar = data.Avatar.ToString();
             byteData.Message = data.Message.ToString();
             byteData.ClientName = data.ClientName;
@@ -64,17 +63,16 @@ namespace NoobsengerLib
                 }
                 byteData.Uploads = uploads.ToArray();
             }
-            var dataString = JsonConvert.SerializeObject(byteData);
-            byte[] barr = Encoding.Default.GetBytes(dataString);
+            byte[] barr = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(byteData));
             return barr;
         }
 
         // Convert a byte array to an Object
-        public static ByteData ByteArrayToData(byte[] arrBytes)
+        public static ChatData ByteArrayToData(byte[] arrBytes)
         {
-            string str = Encoding.Default.GetString(arrBytes);
-            ByteDataString r = JsonConvert.DeserializeObject<ByteDataString>(str);
-            ByteData data = new ByteData(r.ClientName,r.Message, (AvatarManager.Avatars)Enum.Parse(typeof(AvatarManager.Avatars),r.Avatar),dataType: (DataType)Enum.Parse(typeof(DataType),r.DataType),infoCode:r.InfoCode);
+            string str = Encoding.ASCII.GetString(arrBytes);
+            ChatDataString r = JsonConvert.DeserializeObject<ChatDataString>(str);
+            ChatData data = new ChatData(r.ClientName,r.Message, (AvatarManager.Avatars)Enum.Parse(typeof(AvatarManager.Avatars),r.Avatar),dataType: (DataType)Enum.Parse(typeof(DataType),r.DataType),infoCode:r.InfoCode);
             if(data.Uploads != null)
             {
 

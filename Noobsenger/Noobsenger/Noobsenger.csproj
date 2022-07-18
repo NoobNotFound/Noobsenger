@@ -45,7 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\NoobsengerLib\NoobsengerLib.csproj" />
+    <ProjectReference Include="..\..\Noobsenger.Core\Noobsenger.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
