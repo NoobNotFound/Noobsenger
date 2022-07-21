@@ -42,11 +42,11 @@ namespace Noobsenger.Views
                 {
                     if (e.ClientName == Client.UserName)
                     {
-                        Messages.Add(new MessageItem { Avatar = await AvatarUtil.AvatarToBitmap(e.Avatar), From = e.ClientName, Message = e.Message, Time = DateTime.Now,Sender = MessageSender.Me, Count = msgCount });
+                        Messages.Add(MessageItem.Create( new MessageItem { Avatar = await AvatarUtil.AvatarToBitmap(e.Avatar), From = e.ClientName, Message = e.Message, Time = DateTime.Now,Sender = MessageSender.Me, Count = msgCount },Messages));
                     }
                     else
                     {
-                        Messages.Add(new MessageItem { Avatar = await AvatarUtil.AvatarToBitmap(e.Avatar), From = e.ClientName, Message = e.Message, Time = DateTime.Now, Sender = MessageSender.Other, Count = msgCount });
+                        Messages.Add(MessageItem.Create(new MessageItem { Avatar = await AvatarUtil.AvatarToBitmap(e.Avatar), From = e.ClientName, Message = e.Message, Time = DateTime.Now, Sender = MessageSender.Other, Count = msgCount },Messages));
                     }
                 }
                 else if (e.DataType == DataType.InfoMessage)

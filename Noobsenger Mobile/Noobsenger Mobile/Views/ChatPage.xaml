@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:Noobsenger_Mobile.Models"
+             xmlns:helpers="clr-namespace:Noobsenger_Mobile.Helpers"
+             x:Class="Noobsenger_Mobile.Views.ChatPage"
+             BackgroundColor="{AppThemeBinding Dark=#202020,Light=#f3f3f3}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Entry TextColor="{AppThemeBinding Dark=White,Light=Black}" BackgroundColor="Transparent" HorizontalTextAlignment="Center" WidthRequest="200" TextChanged="txtServerName_TextChanged" x:Name="txtServerName" IsReadOnly="True" HorizontalOptions="Center" FontSize="Header" Grid.Row="0"/>
+        <CollectionView ItemsUpdatingScrollMode="KeepLastItemInView" x:Name="lvChat" Grid.Row="1"
+            SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <helpers:ChatItemTemplateSelector>
+                    <helpers:ChatItemTemplateSelector.InfoTemplate>
+                        <DataTemplate x:DataType="models:InfoItem">
+                            <Grid HorizontalOptions="CenterAndExpand">
+                                <Frame CornerRadius="10" BackgroundColor="Silver" Margin="0,10,0,0" HorizontalOptions="Center" Padding="20,10">
+                                    <StackLayout HorizontalOptions="Center">
+                                        <Label TextColor="White" FontSize="Small" HorizontalOptions="Center" Text="{x:Binding TimeString}"/>
+                                        <Label Text="{x:Binding Info}" TextColor="Black" VerticalOptions="Center" HorizontalOptions="Center"/>
+                                    </StackLayout>
+                                </Frame>
+                            </Grid>
+                        </DataTemplate>
+                    </helpers:ChatItemTemplateSelector.InfoTemplate>
+                    <helpers:ChatItemTemplateSelector.MessageTemplate>
+                        <DataTemplate x:DataType="models:MessageItem">
+                            <Grid HorizontalOptions="CenterAndExpand">
+                                <Frame Padding="10" CornerRadius="15" Margin="0,10,5,0" BackgroundColor="{x:Binding Background}" HorizontalOptions="{x:Binding HorizontalAlignment}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0" HorizontalOptions="Start">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition Width="auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Image Source="{x:Binding Avatar,Mode=OneWay}" IsVisible="{x:Binding AvatarVisibility}" WidthRequest="40" Grid.Column="0"/>
+                                            <Label Text="{x:Binding From,Mode=OneWay}" IsVisible="{x:Binding AvatarVisibility}" VerticalOptions="Center" FontSize="20" Margin="5,0" Grid.Column="1"/>
+                                            <Label FontSize="Caption" Text="{x:Binding TimeString,Mode=OneWay}" HorizontalOptions="{x:Binding HorizontalAlignment}" VerticalOptions="Center" TextColor="White" Margin="5,0" Grid.Column="2"/>
+                                        </Grid>
+                                        <Grid Grid.Row="1" Margin="0,5,0,0">
+                                            <Label FontSize="Body" TextColor="Black" Text="{x:Binding Message,Mode=OneWay}"/>
+                                        </Grid>
+                                    </Grid>
+
+                                </Frame>
+                            </Grid>
+                        </DataTemplate>
+                    </helpers:ChatItemTemplateSelector.MessageTemplate>
+                </helpers:ChatItemTemplateSelector>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <Grid VerticalOptions="EndAndExpand" Margin="5,10,5,5" Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Editor x:Name="txtMessage" Grid.Column="0" IsSpellCheckEnabled="True" HorizontalOptions="Fill"/>
+            <Button  VerticalOptions="Fill" Margin="5,0,0,0" x:Name="btnSend" Clicked="btnSend_Clicked" Text="Send" Grid.Column="1"/>
+        </Grid>
+    </Grid>
+</ContentPage>

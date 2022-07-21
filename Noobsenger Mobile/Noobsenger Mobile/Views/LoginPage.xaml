@@ -1,14 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             BackgroundColor="{AppThemeBinding Dark=#171717,Light=#ffffff}"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
-             x:Class="Noobsenger_Mobile.Views.LoginPage"
-             Shell.NavBarIsVisible="False">
+             x:Class="Noobsenger_Mobile.Views.LoginPage">
     <ContentPage.Content>
-        <StackLayout Padding="10,0,10,0" VerticalOptions="Center">
-            <Button VerticalOptions="Center" Text="Login" Command="{Binding LoginCommand}"/>
+        <StackLayout VerticalOptions="Center" HorizontalOptions="Center" >
+            <Label
+                 TextColor="{AppThemeBinding Dark=White,Light=Black}"
+				FontSize="32"
+				Text="Login" />
+            <StackLayout Orientation="Horizontal" Margin="0,0,0,10">
+                <Label
+                 TextColor="{AppThemeBinding Dark=White,Light=#757575}" VerticalOptions="Center" Text="Username: " WidthRequest="75"/>
+                <Entry
+                 TextColor="{AppThemeBinding Dark=White,Light=Black}" Placeholder="Noooooooooooob" x:Name="txtUsername" TextChanged="txtUsername_TextChanged"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" Margin="0,0,0,5">
+                <Label
+                 TextColor="{AppThemeBinding Dark=White,Light=#757575}" HorizontalOptions="Start" Text="Avatar : " VerticalOptions="Center" WidthRequest="75"/>
+                <Picker
+                 TextColor="{AppThemeBinding Dark=White,Light=Black}" SelectedIndexChanged="FlipAvatars_SelectedIndexChanged"  x:Name="FlipAvatars"/>
+            </StackLayout>
+            <Label Margin="0,5,0,0" x:Name="txtInfo" TextColor="Red" IsVisible="False" />
+            <Button
+                Padding="7"
+				Text="Login"
+				Margin="10"
+                Clicked="Button_Clicked"
+				HorizontalOptions="Center" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

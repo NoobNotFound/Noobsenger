@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,10 +14,27 @@ namespace Noobsenger.Helpers
     public enum MessageSender
     {
         Me,
-        Other
+        Other,
+        OtherAgain
     }
     public class MessageItem : Message
     {
+        internal static Message Create(Message msg, ObservableCollection<Message> messages)
+        {
+            var lastMsg = messages.Last();
+            if (lastMsg is MessageItem itm && msg is MessageItem mitm)
+            {
+                if (itm.From == mitm.From)
+                {
+                    if (itm.Sender != MessageSender.Me)
+                    {
+                        mitm.Sender = MessageSender.OtherAgain;
+                    }
+                    return mitm;
+                }
+            }
+            return msg;
+        }
         public string From;
         public BitmapImage Avatar;
         public string Message;
@@ -39,7 +57,7 @@ namespace Noobsenger.Helpers
         { get
             {
                 HorizontalAlignment or;
-                if(Sender == MessageSender.Other)
+                if(Sender == MessageSender.Other || Sender == MessageSender.OtherAgain)
                 {
                     or = HorizontalAlignment.Left;
                 }
@@ -54,7 +72,7 @@ namespace Noobsenger.Helpers
             get
             {
                 Brush or;
-                if (Sender == MessageSender.Other)
+                if (Sender == MessageSender.Other || Sender == MessageSender.OtherAgain)
                 {
                     or = (Brush)App.Current.Resources["LayerFillColorDefaultBrush"];
                 }
@@ -80,8 +98,6 @@ namespace Noobsenger.Helpers
     }
     public class ChatItemTemplateSelector : DataTemplateSelector
     {
-        // Define the (currently empty) data templates to return
-        // These will be "filled-in" in the XAML code.
         public DataTemplate MessageTemplate { get; set; }
 
         public DataTemplate InfoTemplate { get; set; }

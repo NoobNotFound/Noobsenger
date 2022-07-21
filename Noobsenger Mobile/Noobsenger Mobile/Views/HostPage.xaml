@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Noobsenger_Mobile.Views.HostPage"
+             BackgroundColor="{AppThemeBinding Dark=#202020,Light=#f3f3f3}">
+    <ContentPage.Content>
+        <StackLayout
+			Padding="20"
+			VerticalOptions="Center"
+			HorizontalOptions="Center">
+            <Label
+                 TextColor="{AppThemeBinding Dark=White,Light=Black}"
+				FontSize="32"
+				Text="Host a server" />
+            <Label
+                 TextColor="{AppThemeBinding Dark=White,Light=#757575}"
+				Margin="0,10"
+				Text="Choose the IP, Port (optional), and a name for your server." />
+            <StackLayout
+				Orientation="Horizontal">
+                <Label
+                 TextColor="{AppThemeBinding Dark=White,Light=#757575}"
+					Text="IP: "
+					WidthRequest="100"
+					VerticalOptions="Center" />
+                <Picker
+                 TextColor="{AppThemeBinding Dark=White,Light=Black}"
+					WidthRequest="200"
+					x:Name="cmbxIps" />
+            </StackLayout>
+            <StackLayout
+				Margin="0,5,0,0"
+				Orientation="Horizontal">
+                <Label
+                 TextColor="{AppThemeBinding Dark=White,Light=#757575}"
+					Text="Port: "
+					VerticalOptions="Center"
+					WidthRequest="100" />
+                <Entry
+                 TextColor="{AppThemeBinding Dark=White,Light=Black}"
+                    Keyboard="Numeric"
+                    WidthRequest="100"
+                    x:Name="nbrPort" />
+            </StackLayout>
+            <StackLayout
+				Margin="0,5,0,0"
+				Orientation="Horizontal">
+                <Label
+                 TextColor="{AppThemeBinding Dark=White,Light=#757575}"
+                    x:Name="btnHost"
+					Text="Server Name: "
+					VerticalOptions="Center"
+					WidthRequest="100" />
+                <Entry
+                 TextColor="{AppThemeBinding Dark=White,Light=#757575}"
+                    x:Name="txtName"
+                    WidthRequest="250"
+					Placeholder="Noob Server  " />
+            </StackLayout>
+            <Label Margin="0,5,0,0" x:Name="txtInfo" TextColor="Red" IsVisible="False" />
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                <Button
+                Padding="7"
+                Margin="10"
+                Text="Back"
+                    TextColor="#0078d4"
+                    BackgroundColor="Transparent"
+                    Clicked="Button_Clicked_1"
+				HorizontalOptions="Center" />
+                <Button
+                Padding="7"
+                Margin="10"
+                Text="Join"
+                Clicked="Button_Clicked"
+				HorizontalOptions="Center" />
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
