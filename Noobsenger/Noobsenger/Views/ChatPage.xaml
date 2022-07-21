@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    xmlns:helpers="using:Noobsenger.Helpers"
+    xmlns:helpers="using:Noobsenger.Helpers" xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     Loaded="Page_Loaded">
 
     <Grid>
@@ -83,7 +83,7 @@
                                 </Grid.RowDefinitions>
                                 <Grid Grid.Row="0" HorizontalAlignment="Left">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/> 
                                         <ColumnDefinition Width="auto"/>
                                         <ColumnDefinition Width="auto"/>
                                     </Grid.ColumnDefinitions>
@@ -92,7 +92,8 @@
                                     <TextBlock Text="{x:Bind Time.ToShortTimeString(),Mode=OneWay}" HorizontalAlignment="{x:Bind HorizontalAlignment}" VerticalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="5,0" Grid.Column="2"/>
                                 </Grid>
                                 <Grid Grid.Row="1" Margin="0,5,0,0">
-                                    <TextBlock Text="{x:Bind Message,Mode=OneWay}" TextWrapping="WrapWholeWords"/>
+                                    <controls:MarkdownTextBlock Background="Transparent" Text="{x:Bind Message,Mode=OneWay}"
+                                  UriPrefix="https://"  TextWrapping="WrapWholeWords"/>
                                 </Grid>
                             </Grid>
                         </DataTemplate>

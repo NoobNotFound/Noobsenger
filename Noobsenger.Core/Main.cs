@@ -204,7 +204,7 @@ namespace Noobsenger.Core
         public string ServerName { get; set; }
         public async void Connect(IPAddress ip, int port, string userName, AvatarManager.Avatars avatar)
         {
-            clientSocket.Connect(ip, port);
+           await clientSocket.ConnectAsync(ip, port);
             serverStream = clientSocket.GetStream();
             this.UserName = userName;
             this.Avatar = avatar;

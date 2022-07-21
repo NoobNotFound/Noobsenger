@@ -26,9 +26,14 @@ namespace Noobsenger.Views
         {
             this.InitializeComponent();
         }
-
         private void btnHost_Click(object sender, RoutedEventArgs e)
         {
+            new System.Threading.Thread(() =>
+            {
+                while (true)
+                {
+
+                } }).Start();
             MainWindow.NavigateFrame(typeof(HostPage));
         }
 
