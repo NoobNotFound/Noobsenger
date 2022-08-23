@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Application xmlns="http://xamarin.com/schemas/2014/forms"
-             UserAppTheme="Light"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:helpers="clr-namespace:Noobsenger_Mobile.Helpers"
              x:Class="Noobsenger_Mobile.App">
     <!--
         Define global resources and styles here, that apply to all pages in your app.
@@ -9,7 +9,20 @@
     <Application.Resources>
         <ResourceDictionary>
             <Color x:Key="PrimaryColor">#2196F3</Color>
-            <Color x:Key="SecondaryColor">#424242</Color>
+            <Color x:Key="SecondaryColorLight">#f2f2f2</Color>
+            <Color x:Key="SecondaryColorDark">#454545</Color>
+            <helpers:BoolToObjectConverter x:Key="BoolToMessageStyle" x:TypeArguments="Style">
+                <helpers:BoolToObjectConverter.FalseObject>
+                    <Style TargetType="Frame">
+                        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#f2f2f2,Dark=#454545}"/>
+                    </Style>
+                </helpers:BoolToObjectConverter.FalseObject>
+                <helpers:BoolToObjectConverter.TrueObject>
+                    <Style TargetType="Frame">
+                        <Setter Property="BackgroundColor" Value="#2196F3"/>
+                    </Style>
+                </helpers:BoolToObjectConverter.TrueObject>
+            </helpers:BoolToObjectConverter>
             <Style TargetType="Button">
                 <Setter Property="TextColor" Value="White"></Setter>
                     <Setter Property="CornerRadius" Value="7"/>

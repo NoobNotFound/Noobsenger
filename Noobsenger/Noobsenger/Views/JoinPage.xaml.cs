@@ -36,7 +36,7 @@ namespace Noobsenger.Views
                 Noobsenger.Core.Server.IP = Noobsenger.Core.Util.ParseIPAddress(cmbxIps.Text.ToString());
                 Noobsenger.Core.Server.Port = Convert.ToInt32(nbrPort.Value);
                 MainWindow.DisableGoBack = true;
-                MainWindow.NavigateFrame(typeof(ChatPage));
+                MainWindow.NavigateFrame(typeof(UltraChatPage));
             }
             else
             {

@@ -25,16 +25,16 @@
                             <StackPanel>
                                 <TextBlock FontSize="18" FontWeight="SemiBold" Text="Server Info"/>
                                 <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                    <TextBlock Text="IP:" Width="50"/>
-                                    <TextBlock x:Name="txtIP" TextTrimming="CharacterEllipsis" Width="120" Margin="5,0"/>
-                                    <Button x:Name="btnCopyIP" Click="btnCopyIP_Click" Padding="7" ToolTipService.ToolTip="Copy">
+                                    <TextBlock VerticalAlignment="Center" Text="IP:" Width="50"/>
+                                    <TextBlock VerticalAlignment="Center" x:Name="txtIP" TextTrimming="CharacterEllipsis" Width="120" Margin="5,0"/>
+                                    <Button VerticalAlignment="Center" x:Name="btnCopyIP" Click="btnCopyIP_Click" Padding="7" ToolTipService.ToolTip="Copy">
                                         <FontIcon Glyph="&#xe8c8;"/>
                                     </Button>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                    <TextBlock Text="Port:" Width="50"/>
-                                    <TextBlock x:Name="txtPort" Width="120" Margin="5,0"/>
-                                    <Button x:Name="btnCopyPort" Click="btnCopyPort_Click" Padding="7" ToolTipService.ToolTip="Copy">
+                                    <TextBlock VerticalAlignment="Center" Text="Port:" Width="50"/>
+                                    <TextBlock VerticalAlignment="Center" x:Name="txtPort" Width="120" Margin="5,0"/>
+                                    <Button VerticalAlignment="Center" x:Name="btnCopyPort" Click="btnCopyPort_Click" Padding="7" ToolTipService.ToolTip="Copy">
                                         <FontIcon Glyph="&#xe8c8;"/>
                                     </Button>
                                 </StackPanel>

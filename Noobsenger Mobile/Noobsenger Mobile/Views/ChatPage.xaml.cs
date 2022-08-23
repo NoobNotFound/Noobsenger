@@ -20,7 +20,6 @@ namespace Noobsenger_Mobile.Views
         public ChatPage()
         {
             InitializeComponent();
-
             Client = new Client();
             Messages = new ObservableCollection<Message>();
             if (Server.IsHosted)

@@ -34,6 +34,7 @@ namespace Noobsenger_Mobile.Models
         public string Message { get; set; }
         public MessageSender Sender { get; set; }
         public int Count { get; set; }
+        public bool IsMe { get { return Sender == MessageSender.Me; } }
         public bool AvatarVisibility
         {
             get

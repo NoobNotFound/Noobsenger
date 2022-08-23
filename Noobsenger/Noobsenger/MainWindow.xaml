@@ -6,10 +6,15 @@
     Closed="Window_Closed"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:uc="using:Noobsenger.UserControls" xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
+    xmlns:uc="using:Noobsenger.UserControls" xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals" xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
     mc:Ignorable="d">
     <Grid>
-        <Button 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Button 
             Width="45" 
             x:Name="btnFrameBack" 
             Visibility="Collapsed" 
@@ -20,22 +25,35 @@
             Background="Transparent" 
             BorderBrush="Transparent"
             Click="btnFrameBack_Click">
-            <AnimatedIcon 
+                <AnimatedIcon 
                 x:Name="SearchAnimatedIcon">
-                <AnimatedIcon.Source>
-                    <animatedvisuals:AnimatedBackVisualSource/>
-                </AnimatedIcon.Source>
-                <AnimatedIcon.FallbackIconSource>
-                    <SymbolIconSource Symbol="Find"/>
-                </AnimatedIcon.FallbackIconSource>
-            </AnimatedIcon>
+                    <AnimatedIcon.Source>
+                        <animatedvisuals:AnimatedBackVisualSource/>
+                    </AnimatedIcon.Source>
+                    <AnimatedIcon.FallbackIconSource>
+                        <SymbolIconSource Symbol="Find"/>
+                    </AnimatedIcon.FallbackIconSource>
+                </AnimatedIcon>
 
-        </Button>
-        <uc:TitleBar 
+            </Button>
+            <uc:TitleBar 
             Margin="12,0,0,0" 
             VerticalAlignment="Top" 
             x:Name="AppTitleBar"/>
+        </Grid>
         <Frame 
+            Grid.Row="1"
             x:Name="MainFrame"/>
+        <InfoBar Grid.Row="1" Margin="0,0,15,15" IsOpen="True" Canvas.ZIndex="11" VerticalAlignment="Bottom" Visibility="Collapsed" Title="Error" x:Name="infBar" HorizontalAlignment="Right" IsClosable="False">
+            <animations:Implicit.ShowAnimations>
+                <animations:TranslationAnimation Duration="0:0:1" From="200, 0" To="0"/>
+                <animations:OpacityAnimation Duration="0:0:1" From="0" To="1.0"/>
+            </animations:Implicit.ShowAnimations>
+
+            <animations:Implicit.HideAnimations>
+                <animations:TranslationAnimation Duration="0:0:1" From="0" To="200,0"/>
+                <animations:OpacityAnimation Duration="0:0:1" From="1.0" To="0"/>
+            </animations:Implicit.HideAnimations>
+        </InfoBar>
     </Grid>
 </Window>

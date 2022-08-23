@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Noobsenger.Core.Interfaces;
+using Noobsenger.Core.Ultra.DataManager;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +16,10 @@ namespace Noobsenger.Core
     {
         public const string Join = "IC1";
         public const string ServerNameReceived = "IC2";
+        public const string Left = "IC3";
+        public const string AddChannel = "IC4";
+        public const string RemoveChannel = "IC5";
+        public const string AddChannels = "IC6";
     }
     public static class AvatarManager
     {
@@ -193,11 +199,11 @@ namespace Noobsenger.Core
             //end doChat
         }
     }
-    public class Client
+    public class Client : IClient
     {
-        public event EventHandler<ChatData> ChatRecieved = delegate { };
-        public event EventHandler ServerNameChanged = delegate { };
-        private TcpClient clientSocket = new TcpClient();
+        public event EventHandler<IData> ChatRecieved = delegate { };
+        public event EventHandler NameChanged = delegate { };
+        public TcpClient clientSocket { get; set; } = new TcpClient();
         private NetworkStream serverStream = default;
         public string UserName { get; set; }
         public AvatarManager.Avatars Avatar { get; set; }
@@ -219,12 +225,22 @@ namespace Noobsenger.Core
             await serverStream.FlushAsync();
 
         }
-        public async Task SendMessage(ChatData data)
+        public async Task SendMessage(IData data)
         {
-            byte[] outStream = DataEncoder.DataToByteArray(data);
-            await serverStream.WriteAsync(outStream, 0, outStream.Length);
-            serverStream.Flush();
-            await serverStream.FlushAsync();
+            if (data is ChatData d)
+            {
+                byte[] outStream = DataEncoder.DataToByteArray(d);
+                await serverStream.WriteAsync(outStream, 0, outStream.Length);
+                serverStream.Flush();
+                await serverStream.FlushAsync();
+            }
+            else
+            {
+                byte[] outStream = ((Data)data).ToBytes();
+                await serverStream.WriteAsync(outStream, 0, outStream.Length);
+                serverStream.Flush();
+                await serverStream.FlushAsync();
+            }
         }
         private void GetMessage()
         {
@@ -255,7 +271,7 @@ namespace Noobsenger.Core
                         if (returndata.InfoCode == InfoCodes.ServerNameReceived)
                         {
                             this.ServerName = returndata.Message;
-                            ServerNameChanged.Invoke(this, new EventArgs());
+                            NameChanged.Invoke(this, new EventArgs());
                         }
                         else if (returndata.InfoCode == InfoCodes.Join)
                         {

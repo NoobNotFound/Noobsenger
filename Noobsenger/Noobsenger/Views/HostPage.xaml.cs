@@ -35,9 +35,18 @@ namespace Noobsenger.Views
         {
             if (cmbxIps.SelectedItem != null && !string.IsNullOrEmpty(txtName.Text.Replace(" ", "")) && nbrPort.Value > 1023 && nbrPort.Value < 49152)
             {
-                Server.Host((System.Net.IPAddress)cmbxIps.SelectedItem, Convert.ToInt32(nbrPort.Value), txtName.Text);
-                MainWindow.DisableGoBack = true;
-                MainWindow.NavigateFrame(typeof(ChatPage));
+                Server.IP = (System.Net.IPAddress)cmbxIps.SelectedItem;
+                Server.Port = Convert.ToInt32(nbrPort.Value);
+                try
+                {
+                    App.UltraServer.Host((System.Net.IPAddress)cmbxIps.SelectedItem, Convert.ToInt32(nbrPort.Value), txtName.Text);
+                    MainWindow.DisableGoBack = true;
+                    MainWindow.NavigateFrame(typeof(UltraChatPage));
+                }
+                catch (Exception ex)
+                {
+                    ((MainWindow)App.MainWindow).Notify("Errror", ex.Message, InfoBarSeverity.Error);
+                }
             }
             else
             {

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 namespace Noobsenger.Core
 {
-    public class ChatData
+    public class ChatData : Interfaces.IData
     {
         public int Count { get; set; }
         public string ClientName { get; set; }

@@ -13,7 +13,8 @@
                 <Label
                  TextColor="{AppThemeBinding Dark=White,Light=#757575}" VerticalOptions="Center" Text="Username: " WidthRequest="75"/>
                 <Entry
-                 TextColor="{AppThemeBinding Dark=White,Light=Black}" Placeholder="Noooooooooooob" x:Name="txtUsername" TextChanged="txtUsername_TextChanged"/>
+                 TextColor="{AppThemeBinding Dark=White,Light=Black}"
+                    PlaceholderColor="{AppThemeBinding Dark=#bcbcbc,Light=#8b8b8b}" Placeholder="Noooooooooooob" x:Name="txtUsername" TextChanged="txtUsername_TextChanged"/>
             </StackLayout>
             <StackLayout Orientation="Horizontal" Margin="0,0,0,5">
                 <Label

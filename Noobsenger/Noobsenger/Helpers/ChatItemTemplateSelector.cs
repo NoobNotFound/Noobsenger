@@ -21,19 +21,26 @@ namespace Noobsenger.Helpers
     {
         internal static Message Create(Message msg, ObservableCollection<Message> messages)
         {
-            var lastMsg = messages.Last();
-            if (lastMsg is MessageItem itm && msg is MessageItem mitm)
+            try
             {
-                if (itm.From == mitm.From)
+                var lastMsg = messages.Last();
+                if (lastMsg is MessageItem itm && msg is MessageItem mitm)
                 {
-                    if (itm.Sender != MessageSender.Me)
+                    if (itm.From == mitm.From)
                     {
-                        mitm.Sender = MessageSender.OtherAgain;
+                        if (itm.Sender != MessageSender.Me)
+                        {
+                            mitm.Sender = MessageSender.OtherAgain;
+                        }
+                        return mitm;
                     }
-                    return mitm;
                 }
+                return msg;
             }
-            return msg;
+            catch
+            {
+                return msg;
+            }
         }
         public string From;
         public BitmapImage Avatar;

@@ -52,8 +52,9 @@
 					VerticalOptions="Center"
 					WidthRequest="100" />
                 <Entry
-                 TextColor="{AppThemeBinding Dark=White,Light=#757575}"
+                 TextColor="{AppThemeBinding Dark=White,Light=Black}"
                     x:Name="txtName"
+                    PlaceholderColor="{AppThemeBinding Dark=#bcbcbc,Light=#8b8b8b}"
                     WidthRequest="250"
 					Placeholder="Noob Server  " />
             </StackLayout>
@@ -70,7 +71,7 @@
                 <Button
                 Padding="7"
                 Margin="10"
-                Text="Join"
+                Text="Host"
                 Clicked="Button_Clicked"
 				HorizontalOptions="Center" />
             </StackLayout>

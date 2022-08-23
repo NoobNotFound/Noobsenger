@@ -17,7 +17,7 @@ namespace Noobsenger_Mobile.Views
             InitializeComponent();
         }
 
-        private void btnJoin_Clicked(object sender, EventArgs e)
+        private async void btnJoin_Clicked(object sender, EventArgs e)
         {
             Application.Current.MainPage = new JoinPage();
         }

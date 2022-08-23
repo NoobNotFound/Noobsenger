@@ -27,6 +27,8 @@ namespace Noobsenger
     /// </summary>
     public partial class App : Application
     {
+        public static Core.Ultra.UltraServer UltraServer = new();
+        public static Core.Ultra.UltraClient UltraClient = new();
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
