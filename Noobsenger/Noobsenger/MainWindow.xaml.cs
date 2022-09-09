@@ -41,13 +41,8 @@ namespace Noobsenger
         public MainWindow()
         {
             this.InitializeComponent();
-            this.ExtendsContentIntoTitleBar = true;  // enable custom titlebar
-            this.SetTitleBar(AppTitleBar);
             Title = "Noobsenger";
-            var res = Application.Current.Resources;
-            res["WindowCaptionBackground"] = Colors.Transparent;
-            res["WindowCaptionBackgroundDisabled"] = Colors.Transparent;
-            TriggerTitleBarRepaint();
+            Helpers.TittleBarHelper.SetExtendedTitleBar(this, AppTitleBar);
             RootMainFrame = MainFrame;
             RootMainFrame.Navigated += RootMainFrame_Navigated;
             RootMainFrame.Navigate(typeof(Views.WelcomePage));
@@ -107,15 +102,7 @@ namespace Noobsenger
         }
         private void Window_Closed(object sender, WindowEventArgs args)
         {
-            try
-            {
-                if (Server.IsHosted)
-                {
-                    Server.IsRuns = false;
-                    Application.Current.Exit();
-                }
-            }
-            catch { }
+            Application.Current.Exit();
         }
     }
 }

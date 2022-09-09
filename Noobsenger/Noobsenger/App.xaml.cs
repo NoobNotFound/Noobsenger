@@ -16,6 +16,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -29,6 +30,7 @@ namespace Noobsenger
     {
         public static Core.Ultra.UltraServer UltraServer = new();
         public static Core.Ultra.UltraClient UltraClient = new();
+        public static Color LayerFillColorDefaultColor => (Color)Current.Resources["LayerFillColorDefault"];
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().

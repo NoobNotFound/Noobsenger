@@ -103,17 +103,32 @@ namespace Noobsenger.Core.Ultra
                         }
                         else if (returndata.InfoCode == InfoCodes.AddChannels)
                         {
-                            if (returndata.Objects != null)
+                            var chnls = returndata.Message.Split(':'); 
+                            foreach (var item in chnls)
                             {
-                                foreach (var item in returndata.Objects)
+                                if (int.TryParse(item,out _))
                                 {
                                     var c = new ChannelClient();
-                                    c.Connect(IP, (int)item, UserName, Avatar);
+                                    c.Connect(IP, int.Parse(item), UserName, Avatar);
                                     Channels.Add(c);
                                     ChannelAdded(this, c.Port);
                                 }
                             }
                         }
+                        else if (returndata.InfoCode == InfoCodes.ServerClosed)
+                        {
+                            try
+                            {
+                                foreach (var Item in Channels)
+                                {
+                                    Item.clientSocket.Dispose();
+                                    Channels.Remove(Item);
+
+                                }
+                            }
+                            catch { }
+                        }
+
 
                     }
                 }

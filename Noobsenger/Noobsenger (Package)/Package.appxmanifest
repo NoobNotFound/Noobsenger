@@ -9,7 +9,7 @@
   <Identity
     Name="Noob.Messenger"
     Publisher="CN=NooB"
-    Version="0.3.1.0" />
+    Version="0.4.3.0" />
 
   <Properties>
     <DisplayName>Noobsenger (Package)</DisplayName>

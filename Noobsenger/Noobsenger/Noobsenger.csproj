@@ -14,6 +14,7 @@
 		<Content Include="Images\icon.png" />
 	</ItemGroup>
   <ItemGroup>
+    <None Remove="MessageToast.txt" />
     <None Remove="UserControls\TitleBar.xaml" />
     <None Remove="Views\ChatPage.xaml" />
     <None Remove="Views\HostPage.xaml" />
@@ -38,6 +39,7 @@
 		<Content Include="Images\Avatars\Woman.png" />
 		<Content Include="Images\Avatars\Woman1.png" />
 		<Content Include="Images\Avatars\Woman2.png" />
+		<Content Include="MessageToast.txt" />
 	</ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.1.2" />
@@ -50,6 +52,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Noobsenger.Core\Noobsenger.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Images\iconCopy.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

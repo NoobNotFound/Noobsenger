@@ -16,6 +16,7 @@ using Noobsenger.Core.Ultra;
 using Noobsenger.Core;
 using Noobsenger.Core.Interfaces;
 using System.Collections.ObjectModel;
+using Windows.ApplicationModel.DataTransfer;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -30,6 +31,8 @@ namespace Noobsenger.Views
         public UltraChatPage()
         {
             this.InitializeComponent();
+            txtIP.Text = Core.Server.IP.ToString();
+            txtPort.Text = Core.Server.Port.ToString();
             App.UltraClient = new();
             App.UltraClient.NameChanged += UltraClient_NameChanged;
             App.UltraClient.ChannelAdded += UltraClient_ChannelAdded;
@@ -144,13 +147,16 @@ namespace Noobsenger.Views
 
         private void navView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
-            if(navView.SelectedItem is NavigationViewItem itm)
+            if (!args.IsSettingsInvoked)
             {
-                foreach (var item in ChannelPages)
+                if (navView.SelectedItem is NavigationViewItem itm)
                 {
-                    if( ((ChannelClient)item.Client).Port == Convert.ToInt32(itm.Tag))
+                    foreach (var item in ChannelPages)
                     {
-                        ChatFrame.Content = item;
+                        if (((ChannelClient)item.Client).Port == Convert.ToInt32(itm.Tag))
+                        {
+                            ChatFrame.Content = item;
+                        }
                     }
                 }
             }
@@ -159,6 +165,20 @@ namespace Noobsenger.Views
         private void btnMitAddChannel_Click(object sender, RoutedEventArgs e)
         {
             txtAddNewServer.Text = "";
+        }
+
+        private void btnCopyIP_Click(object sender, RoutedEventArgs e)
+        {
+            var dataPackage = new DataPackage();
+            dataPackage.SetText(Server.IP.ToString());
+            Clipboard.SetContent(dataPackage);
+        }
+
+        private void btnCopyPort_Click(object sender, RoutedEventArgs e)
+        {
+            var dataPackage = new DataPackage();
+            dataPackage.SetText(Server.Port.ToString());
+            Clipboard.SetContent(dataPackage);
         }
     }
 }

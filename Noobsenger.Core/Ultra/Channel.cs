@@ -93,6 +93,7 @@ namespace Noobsenger.Core.Ultra
                                 {
                                     if (Item.ClientNumber == ((ClientHandler)sender).ClientNumber)
                                     {
+                                        Item.ClientSocket.Dispose();
                                         ClientHandlersList.Remove(Item);
                                         return;
                                     }
@@ -101,12 +102,30 @@ namespace Noobsenger.Core.Ultra
                             catch { }
                             BroadcastAll(new Data(((ClientHandler)sender).ClientName, ((ClientHandler)sender).ClientName + " Left.", dataType: DataType.InfoMessage, infoCode: InfoCodes.Left));
                         };
-                        client.BytesRecieved += (sender, e) => BroadcastAll(e.Bytes,e.Length);
+                        client.BytesRecieved += (sender, e) => BroadcastAll(e.Bytes, e.Length);
                         TcpClientsList.Add(ClientsCount, clientSocket);
                         ClientHandlersList.Add(client);
                         client.Start();
                         BroadcastAll(new Data(dataFromClient.ClientName, dataFromClient.ClientName + " Joined.", dataFromClient.Avatar, new List<Uri>().ToArray(), DataType.InfoMessage, InfoCodes.Join));
                         BroadcastAll(new Data(ChannelName, ChannelName, dataType: DataType.InfoMessage, infoCode: InfoCodes.ServerNameReceived));
+                    }
+                    else if (dataFromClient.InfoCode == InfoCodes.ServerClosed)
+                    {
+                        try
+                        {
+                            foreach (DictionaryEntry Item in TcpClientsList)
+                            {
+                                TcpClientsList.Remove(Item);
+
+                            }
+                            foreach (var Item in ClientHandlersList)
+                            {
+                                Item.ClientSocket.Dispose();
+                                ClientHandlersList.Remove(Item);
+
+                            }
+                        }
+                        catch { } 
                     }
                 }
             }

@@ -20,6 +20,8 @@ using Windows.ApplicationModel.DataTransfer;
 using System.Net;
 using Noobsenger.Core.Interfaces;
 using Noobsenger.Core.Ultra.DataManager;
+using Windows.UI.Notifications;
+using Windows.Storage;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -60,6 +62,7 @@ namespace Noobsenger.Views
                     else
                     {
                         Messages.Add(MessageItem.Create(new MessageItem { Avatar = await AvatarUtil.AvatarToBitmap(e.Avatar), From = e.ClientName, Message = e.Message, Time = DateTime.Now, Sender = MessageSender.Other, Count = msgCount }, Messages));
+                        Notify(e.ClientName, e.Message, AvatarUtil.AvatarToPathString(e.Avatar));
                     }
                 }
                 else if (e.DataType == DataType.InfoMessage)
@@ -76,7 +79,47 @@ namespace Noobsenger.Views
                 msgCount++;
             });
         }
+        private async void Notify(string sender,string message,string avatarUri)
+        {
+            var f = await StorageFile.GetFileFromApplicationUriAsync(new Uri(@"ms-appx:///MessageToast.txt"));
+            var xml = (await FileIO.ReadTextAsync(f)).Replace("{Sender}", sender).Replace("{Message}", message).Replace("{AvatarUri}", avatarUri);
+            
+            /* var toastContent = new ToastContent()
+            {
+                Visual = new ToastVisual()
+                {
+                    BindingGeneric = new ToastBindingGeneric()
+                    {
+                        Children =
+            {
+                new AdaptiveText()
+                {
+                    Text = sender
+                },
+                new AdaptiveText()
+                {
+                    Text = message
+                }
+            },
+                        AppLogoOverride = new ToastGenericAppLogo()
+                        {
+                            Source = avatarUri,
+                            HintCrop = ToastGenericAppLogoCrop.Circle
+                        }
+                    }
+                },
+                Actions = new ToastActionsCustom()
+            };
+            */
 
+            // Create the toast notification
+            var doc = new Windows.Data.Xml.Dom.XmlDocument();
+            doc.LoadXml(xml);
+            var toastNotif = new ToastNotification(doc);
+
+            // And send the notification
+            ToastNotificationManager.CreateToastNotifier().Show(toastNotif);
+        }
         private void Client_ServerNameChanged(object sender, EventArgs args)
         {
             if (!IsUltra)
@@ -264,6 +307,11 @@ namespace Noobsenger.Views
                     }
                 }
             }
+        }
+
+        private void KeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            btnSend_Click(null, null);
         }
     }
 }

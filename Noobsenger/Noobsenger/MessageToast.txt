@@ -1,0 +1,17 @@
+﻿<toast>
+
+    <visual>
+        <binding template="ToastGeneric">
+            <text>{Sender}</text>
+            <text>{Message}</text>
+            <image placement="appLogoOverride" hint-crop="circle" src="{AvatarUri}"/>
+
+        </binding>
+    </visual>
+
+    <actions>
+
+
+    </actions>
+
+</toast>

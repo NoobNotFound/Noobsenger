@@ -20,6 +20,8 @@ namespace Noobsenger.Core
         public const string AddChannel = "IC4";
         public const string RemoveChannel = "IC5";
         public const string AddChannels = "IC6";
+        public const string ServerClosed = "IC7";
+        public const string ChannelClosed = "IC8";
     }
     public static class AvatarManager
     {

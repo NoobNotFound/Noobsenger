@@ -28,8 +28,8 @@ namespace Noobsenger.Core.Ultra
             }
         }
         public Hashtable ClientsList = new Hashtable();
-        public bool IsRuns = true;
-        public bool IsHosted = false;
+        private bool IsRuns = true;
+        public bool IsHosted { get; private set; } = false;
         public TcpListener ServerSocket;
         public int AddChannel(string channelName)
         {
@@ -67,6 +67,14 @@ namespace Noobsenger.Core.Ultra
             else
             {
                 throw new Exception("Server was not hosted");
+            }
+        }
+        public void CloseServer()
+        {
+            if (IsHosted)
+            {
+                BroadcastAll(new Data(infoCode: InfoCodes.ServerClosed));
+                this.IsRuns = false;
             }
         }
         public void RemoveChannel(int channelCount)
@@ -159,7 +167,7 @@ namespace Noobsenger.Core.Ultra
                         {
                             channelPorts.Add(item.Port);
                         }
-                        var data = new Data(objects:channelPorts.Select(x=> (object)x).ToArray(), dataType: DataType.InfoMessage, infoCode: InfoCodes.AddChannels).ToBytes();
+                        var data = new Data(message:string.Join(",",channelPorts.ToArray()), dataType: DataType.InfoMessage, infoCode: InfoCodes.AddChannels).ToBytes();
                         var s = client.ClientSocket.GetStream();
                         s.Write(data, 0, data.Length);
                         s.Flush();
