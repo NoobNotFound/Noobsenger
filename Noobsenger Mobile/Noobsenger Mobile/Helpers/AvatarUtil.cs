@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Noobsenger.Core;
-namespace Noobsenger_Mobile.Helpers
+namespace Noobsenger.Mobile.Helpers
 {
     public class AvatarUtil
     {

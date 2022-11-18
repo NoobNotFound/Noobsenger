@@ -67,6 +67,10 @@ namespace Noobsenger.Core.Ultra
                     }
                     else if (returndata.DataType == DataType.InfoMessage)
                     {
+                        if (returndata.InfoCode == InfoCodes.ImgFromWeb)
+                        {
+                            ChatRecieved.Invoke(returndata.ClientName, returndata);
+                        }
                         if (returndata.InfoCode == InfoCodes.ServerNameReceived)
                         {
                             this.ServerName = returndata.Message;

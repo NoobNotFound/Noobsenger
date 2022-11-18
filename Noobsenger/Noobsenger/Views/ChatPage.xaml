@@ -83,7 +83,7 @@
                                 </Grid.RowDefinitions>
                                 <Grid Grid.Row="0" HorizontalAlignment="Left">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="auto"/> 
+                                        <ColumnDefinition Width="auto"/>
                                         <ColumnDefinition Width="auto"/>
                                         <ColumnDefinition Width="auto"/>
                                     </Grid.ColumnDefinitions>
@@ -98,6 +98,35 @@
                             </Grid>
                         </DataTemplate>
                     </helpers:ChatItemTemplateSelector.MessageTemplate>
+                    <helpers:ChatItemTemplateSelector.ImageTemplate>
+                        <DataTemplate x:DataType="helpers:MessageItem">
+                            <Grid CornerRadius="5" Padding="10" Margin="5,10,5,0" HorizontalAlignment="{x:Bind HorizontalAlignment}" Background="{x:Bind Background}">
+                                <Grid.ContextFlyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem Tag="{x:Bind Count}" Click="mitCopyMsg_Click" Text="Copy message"/>
+                                        <MenuFlyoutItem  Tag="{x:Bind Count}" Click="mitDelmsg_Click" Text="Delete message"/>
+                                    </MenuFlyout>
+                                </Grid.ContextFlyout>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0" HorizontalAlignment="Left">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Source="{x:Bind Avatar,Mode=OneWay}" Visibility="{x:Bind AvatarVisibility}" Width="40" Stretch="Uniform" Grid.Column="0"/>
+                                    <TextBlock Text="{x:Bind From,Mode=OneWay}" Visibility="{x:Bind AvatarVisibility}" VerticalAlignment="Center" FontSize="20" Margin="5,0" Grid.Column="1"/>
+                                    <TextBlock Text="{x:Bind Time.ToShortTimeString(),Mode=OneWay}" HorizontalAlignment="{x:Bind HorizontalAlignment}" VerticalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="5,0" Grid.Column="2"/>
+                                </Grid>
+                                <Grid Grid.Row="1" Margin="0,5,0,0" Padding="5">
+                                    <Image Source="{x:Bind Message}" Stretch="Uniform"/>
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </helpers:ChatItemTemplateSelector.ImageTemplate>
                 </helpers:ChatItemTemplateSelector>
             </ListView.ItemTemplateSelector>
         </ListView>
@@ -106,13 +135,25 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <TextBox AcceptsReturn="True" MaxHeight="400" x:Name="txtMessage" Grid.Column="0" IsSpellCheckEnabled="True" HorizontalAlignment="Stretch">
                 <TextBox.KeyboardAccelerators>
                     <KeyboardAccelerator Modifiers="Shift" Key="Enter" Invoked="KeyboardAccelerator_Invoked"/>
                 </TextBox.KeyboardAccelerators>
             </TextBox>
-            <Button VerticalAlignment="Stretch" Margin="5,0,0,0" x:Name="btnSend" Click="btnSend_Click" Grid.Column="1">
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Button>
+                    <Button VerticalAlignment="Stretch" Margin="5,0,0,0" x:Name="btnGif" Click="btnGif_Click" Grid.Column="2">
+                        <FontIcon Glyph="&#xF4A9;"/>
+                    </Button>
+                </Button>
+            </Grid>
+            <Button VerticalAlignment="Stretch" Margin="5,0,0,0" x:Name="btnSend" Click="btnSend_Click" Grid.Column="2">
                 <FontIcon FontSize="{ThemeResource TitleTextBlockFontSize}" FontWeight="SemiBold" Glyph="&#xe724;"/>
             </Button>
         </Grid>

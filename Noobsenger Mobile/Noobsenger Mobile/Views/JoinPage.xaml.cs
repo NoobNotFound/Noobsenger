@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Noobsenger_Mobile.Views
+namespace Noobsenger.Mobile.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class JoinPage : ContentPage
@@ -30,7 +30,7 @@ namespace Noobsenger_Mobile.Views
                 txtInfo.IsVisible = true;
                 return;
             }
-            if (Noobsenger.Core.Util.ParseIPAddress(txtIp.Text.ToString()) != null && int.Parse( nbrPort.Text) > 1023 && int.Parse(nbrPort.Text) < 49152)
+            if (Noobsenger.Core.Util.ParseIPAddress(txtIp.Text.ToString()) != null && int.Parse(nbrPort.Text) > 1023 && int.Parse(nbrPort.Text) < 49152)
             {
                 Noobsenger.Core.Server.IP = Noobsenger.Core.Util.ParseIPAddress(txtIp.Text.ToString());
                 Noobsenger.Core.Server.Port = Convert.ToInt32(nbrPort.Text);

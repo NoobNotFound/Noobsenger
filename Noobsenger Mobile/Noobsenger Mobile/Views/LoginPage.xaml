@@ -1,26 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             BackgroundColor="{AppThemeBinding Dark=#171717,Light=#ffffff}"
+             BackgroundColor="{AppThemeBinding Dark={StaticResource DarkBackground},Light={StaticResource LightBackground}}"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Noobsenger_Mobile.Views.LoginPage">
+             x:Class="Noobsenger.Mobile.Views.LoginPage">
     <ContentPage.Content>
         <StackLayout VerticalOptions="Center" HorizontalOptions="Center" >
             <Label
-                 TextColor="{AppThemeBinding Dark=White,Light=Black}"
+                 
 				FontSize="32"
 				Text="Login" />
             <StackLayout Orientation="Horizontal" Margin="0,0,0,10">
                 <Label
-                 TextColor="{AppThemeBinding Dark=White,Light=#757575}" VerticalOptions="Center" Text="Username: " WidthRequest="75"/>
-                <Entry
-                 TextColor="{AppThemeBinding Dark=White,Light=Black}"
-                    PlaceholderColor="{AppThemeBinding Dark=#bcbcbc,Light=#8b8b8b}" Placeholder="Noooooooooooob" x:Name="txtUsername" TextChanged="txtUsername_TextChanged"/>
+                  VerticalOptions="Center" Text="Username: " WidthRequest="75"/>
+                <Entry Placeholder="Noooooooooooob" x:Name="txtUsername" TextChanged="txtUsername_TextChanged"/>
             </StackLayout>
             <StackLayout Orientation="Horizontal" Margin="0,0,0,5">
                 <Label
-                 TextColor="{AppThemeBinding Dark=White,Light=#757575}" HorizontalOptions="Start" Text="Avatar : " VerticalOptions="Center" WidthRequest="75"/>
+                  HorizontalOptions="Start" Text="Avatar : " VerticalOptions="Center" WidthRequest="75"/>
                 <Picker
-                 TextColor="{AppThemeBinding Dark=White,Light=Black}" SelectedIndexChanged="FlipAvatars_SelectedIndexChanged"  x:Name="FlipAvatars"/>
+                  SelectedIndexChanged="FlipAvatars_SelectedIndexChanged"  x:Name="FlipAvatars"/>
             </StackLayout>
             <Label Margin="0,5,0,0" x:Name="txtInfo" TextColor="Red" IsVisible="False" />
             <Button

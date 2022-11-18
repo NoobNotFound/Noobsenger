@@ -98,6 +98,7 @@ namespace Noobsenger.Helpers
         public DateTime Time { get; set; }
         public int Count { get; set; }
     }
+    public class ImageItem : MessageItem { };
     public interface Message
     {
         public int Count { get; set; }
@@ -109,6 +110,8 @@ namespace Noobsenger.Helpers
 
         public DataTemplate InfoTemplate { get; set; }
 
+        public DataTemplate ImageTemplate { get; set; }
+
         protected override DataTemplate SelectTemplateCore(object item)
         {
             // Return the correct data template based on the item's type.
@@ -117,6 +120,10 @@ namespace Noobsenger.Helpers
                 return MessageTemplate;
             }
             else if (item.GetType() == typeof(InfoItem))
+            {
+                return InfoTemplate;
+            }
+            else if (item.GetType() == typeof(ImageItem))
             {
                 return InfoTemplate;
             }

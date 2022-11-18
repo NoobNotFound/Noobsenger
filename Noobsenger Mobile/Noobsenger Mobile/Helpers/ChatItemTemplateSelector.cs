@@ -1,11 +1,11 @@
-﻿using Noobsenger_Mobile.Models;
+﻿using Noobsenger.Mobile.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using Xamarin.Forms;
 
-namespace Noobsenger_Mobile.Helpers
+namespace Noobsenger.Mobile.Helpers
 {
     public class ChatItemTemplateSelector : DataTemplateSelector
     {

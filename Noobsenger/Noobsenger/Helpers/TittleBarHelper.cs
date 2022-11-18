@@ -17,7 +17,7 @@ namespace Noobsenger.Helpers
             FrameworkElement RootUI = (FrameworkElement)window.Content;
             if (AppWindowTitleBar.IsCustomizationSupported())
             {
-                AppWindow AppWindow = AppWindow.GetFromWindowId(Win32Interop.GetWindowIdFromWindow(WindowNative.GetWindowHandle(window)));
+                AppWindow AppWindow = window.ToAppWindow();
                 var titlebar = AppWindow.TitleBar;
                 titlebar.ExtendsContentIntoTitleBar = true;
                 void SetColor(ElementTheme acualTheme)

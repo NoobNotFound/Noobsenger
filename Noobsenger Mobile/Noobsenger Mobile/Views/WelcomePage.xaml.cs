@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Noobsenger_Mobile.Views
+namespace Noobsenger.Mobile.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class WelcomePage : ContentPage
@@ -17,7 +17,7 @@ namespace Noobsenger_Mobile.Views
             InitializeComponent();
         }
 
-        private async void btnJoin_Clicked(object sender, EventArgs e)
+        private void btnJoin_Clicked(object sender, EventArgs e)
         {
             Application.Current.MainPage = new JoinPage();
         }

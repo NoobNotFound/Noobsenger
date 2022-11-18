@@ -50,17 +50,14 @@ namespace Noobsenger
 
         private void RootMainFrame_Navigated(object sender, NavigationEventArgs e)
         {
-            if (RootMainFrame.CanGoBack)
+            if (RootMainFrame.CanGoBack && !DisableGoBack)
             {
                 btnFrameBack.Visibility = Visibility.Visible;
-                AppTitleBar.Margin = new Thickness(50, 0, 0, 0);
+                AppTitleBar.Margin = new Thickness(5, 0, 0, 0);
+                this.ToAppWindow().TitleBar.ExtendsContentIntoTitleBar = false;
+                this.ToAppWindow().TitleBar.ExtendsContentIntoTitleBar = true;
             }
             else
-            {
-                btnFrameBack.Visibility = Visibility.Collapsed;
-                AppTitleBar.Margin = new Thickness(12, 0, 0, 0);
-            }
-            if (DisableGoBack)
             {
                 btnFrameBack.Visibility = Visibility.Collapsed;
                 AppTitleBar.Margin = new Thickness(12, 0, 0, 0);
@@ -102,7 +99,7 @@ namespace Noobsenger
         }
         private void Window_Closed(object sender, WindowEventArgs args)
         {
-            Application.Current.Exit();
+
         }
     }
 }

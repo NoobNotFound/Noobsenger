@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using Xamarin.Forms;
 
-namespace Noobsenger_Mobile.Models
+namespace Noobsenger.Mobile.Models
 {
     public enum MessageSender
     {

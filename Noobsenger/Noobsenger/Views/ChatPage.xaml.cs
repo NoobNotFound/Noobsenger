@@ -22,6 +22,8 @@ using Noobsenger.Core.Interfaces;
 using Noobsenger.Core.Ultra.DataManager;
 using Windows.UI.Notifications;
 using Windows.Storage;
+using System.Globalization;
+
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -70,6 +72,10 @@ namespace Noobsenger.Views
                     if (e.InfoCode == InfoCodes.Join)
                     {
                         Messages.Add(new InfoItem { Info = e.Message, Time = DateTime.Now, Count = msgCount });
+                    }
+                    if (e.InfoCode == InfoCodes.ImgFromWeb)
+                    {
+                        Messages.Add(MessageItem.Create(new MessageItem { Avatar = await AvatarUtil.AvatarToBitmap(e.Avatar), From = e.ClientName, Message = e.Message, Time = DateTime.Now, Sender = MessageSender.Other, Count = msgCount }, Messages));
                     }
                     else if(e.InfoCode == InfoCodes.Left)
                     {
@@ -312,6 +318,10 @@ namespace Noobsenger.Views
         private void KeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             btnSend_Click(null, null);
+        }
+
+        private void btnGif_Click(object sender, RoutedEventArgs e)
+        { 
         }
     }
 }

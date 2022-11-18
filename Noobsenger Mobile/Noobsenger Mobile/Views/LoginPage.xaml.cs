@@ -7,7 +7,7 @@ using Noobsenger.Core;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Noobsenger_Mobile.Views
+namespace Noobsenger.Mobile.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LoginPage : ContentPage
@@ -40,14 +40,14 @@ namespace Noobsenger_Mobile.Views
 
         private void Button_Clicked(object sender, EventArgs e)
         {
-            if(string.IsNullOrEmpty(txtUsername.Text) || FlipAvatars.SelectedItem == null)
+            if (string.IsNullOrEmpty(txtUsername.Text) || FlipAvatars.SelectedItem == null)
             {
                 txtInfo.Text = "Something went wrong with these info,\nPlease Check again man!";
                 txtInfo.IsVisible = true;
             }
             else
             {
-                Application.Current.MainPage = new ChatPage();
+                Application.Current.MainPage = new Ultra.UltraChat();
             }
         }
     }

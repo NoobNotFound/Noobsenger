@@ -51,6 +51,10 @@ namespace Noobsenger
             MainWindow.Activate();
             var bg = new MicaBackground(MainWindow);
             bg.TrySetMicaBackdrop();
+            if (args.UWPLaunchActivatedEventArgs.Kind == ActivationKind.Protocol)
+            {
+                _ = new ContentDialog() { Content = new TextBlock { Text = args.UWPLaunchActivatedEventArgs.Arguments }, XamlRoot = MainWindow.Content.XamlRoot }.ShowAsync();
+            }
         }
 
         public static Window MainWindow;

@@ -14,19 +14,22 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
-            <Button 
-            Width="45" 
-            x:Name="btnFrameBack" 
-            Visibility="Collapsed" 
-            VerticalAlignment="Top" 
-            HorizontalAlignment="Left" 
-            Padding="10" 
-            CornerRadius="0,0,5,0" 
-            Background="Transparent" 
-            BorderBrush="Transparent"
-            Click="btnFrameBack_Click">
-                <AnimatedIcon 
-                x:Name="SearchAnimatedIcon">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button
+                Grid.Column="0"
+                Margin="0,0,5,0"
+                Width="45" 
+                x:Name="btnFrameBack" 
+                Visibility="Collapsed"
+                Padding="10" 
+                CornerRadius="0,0,5,0" 
+                Background="Transparent" 
+                BorderBrush="Transparent"
+                Click="btnFrameBack_Click">
+                <AnimatedIcon x:Name="SearchAnimatedIcon">
                     <AnimatedIcon.Source>
                         <animatedvisuals:AnimatedBackVisualSource/>
                     </AnimatedIcon.Source>
@@ -36,8 +39,9 @@
                 </AnimatedIcon>
 
             </Button>
-            <uc:TitleBar 
-            Margin="12,0,0,0" 
+            <uc:TitleBar
+                HorizontalAlignment="Left"
+                Grid.Column="1"
             VerticalAlignment="Top" 
             x:Name="AppTitleBar"/>
         </Grid>

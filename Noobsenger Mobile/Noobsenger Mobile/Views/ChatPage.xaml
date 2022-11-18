@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:models="clr-namespace:Noobsenger_Mobile.Models"
-             xmlns:helpers="clr-namespace:Noobsenger_Mobile.Helpers"
-             x:Class="Noobsenger_Mobile.Views.ChatPage"
-             BackgroundColor="{AppThemeBinding Dark=#202020,Light=#White}">
+             xmlns:models="clr-namespace:Noobsenger.Mobile.Models"
+             xmlns:helpers="clr-namespace:Noobsenger.Mobile.Helpers"
+             x:Class="Noobsenger.Mobile.Views.ChatPage"
+             BackgroundColor="{AppThemeBinding Dark={StaticResource DarkBackground},Light={StaticResource LightBackground}}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -31,7 +31,7 @@
                     <helpers:ChatItemTemplateSelector.MessageTemplate>
                         <DataTemplate x:DataType="models:MessageItem">
                             <Grid HorizontalOptions="CenterAndExpand">
-                                <Frame HasShadow="False" Padding="10" CornerRadius="15" Margin="5,10,5,0" Style="{x:Binding IsMe,Converter={StaticResource BoolToMessageStyle}}" HorizontalOptions="{x:Binding HorizontalAlignment}">
+                                <Frame HasShadow="False" Padding="10" CornerRadius="15" Margin="5,10,5,0" Style="{x:Binding IsMe,Converter={StaticResource BoolToMessageFrameStyle}}" HorizontalOptions="{x:Binding HorizontalAlignment}">
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="auto"/>

@@ -4,19 +4,19 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Noobsenger.Core;
-using Noobsenger_Mobile.Helpers;
-using Noobsenger_Mobile.Models;
+using Noobsenger.Mobile.Helpers;
+using Noobsenger.Mobile.Models;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Noobsenger_Mobile.Views
+namespace Noobsenger.Mobile.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ChatPage : ContentPage
     {
         public Client Client { get; set; }
         public ObservableCollection<Message> Messages { get; set; }
-        int msgCount= 0;
+        int msgCount = 0;
         public ChatPage()
         {
             InitializeComponent();
@@ -30,7 +30,7 @@ namespace Noobsenger_Mobile.Views
             else
             {
                 txtServerName.IsReadOnly = true;
-                Client.ServerNameChanged += Client_ServerNameChanged; ;
+                Client.NameChanged += Client_ServerNameChanged; ;
             }
             Client.ChatRecieved += Client_ChatRecieved;
             lvChat.ItemsSource = Messages;
@@ -50,7 +50,7 @@ namespace Noobsenger_Mobile.Views
             }
         }
 
-        private void Client_ChatRecieved(object sender, ChatData e)
+        private void Client_ChatRecieved(object sender, Core.Interfaces.IData e)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace Noobsenger_Mobile.Views
                         }
                         else
                         {
-                            Messages.Add(MessageItem.Create(new MessageItem { Avatar = AvatarUtil.AvatarToBitmap(e.Avatar), From = e.ClientName, Message = e.Message, Time = DateTime.Now, Sender = MessageSender.Other, Count = msgCount },Messages));
+                            Messages.Add(MessageItem.Create(new MessageItem { Avatar = AvatarUtil.AvatarToBitmap(e.Avatar), From = e.ClientName, Message = e.Message, Time = DateTime.Now, Sender = MessageSender.Other, Count = msgCount }, Messages));
                         }
                     }
                     else if (e.DataType == DataType.InfoMessage)
