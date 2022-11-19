@@ -40,7 +40,8 @@
 
             </Button>
             <uc:TitleBar
-                HorizontalAlignment="Left"
+                
+                HorizontalAlignment="Stretch"
                 Grid.Column="1"
             VerticalAlignment="Top" 
             x:Name="AppTitleBar"/>

@@ -10,9 +10,9 @@ using WinRT.Interop;
 
 namespace Noobsenger.Helpers
 {
-    public static class TittleBarHelper
+    public static class TitleBarHelper
     {
-        public static void SetExtendedTitleBar(Window window, UIElement AppTitleBar)
+        public static void SetExtendedTitleBar(Window window, UIElement AppTitleBar = null)
         {
             FrameworkElement RootUI = (FrameworkElement)window.Content;
             if (AppWindowTitleBar.IsCustomizationSupported())
@@ -39,13 +39,19 @@ namespace Noobsenger.Helpers
                     }
                 }
                 RootUI.ActualThemeChanged += (s, _) => SetColor(s.ActualTheme);
-                window.SetTitleBar(AppTitleBar);
+                if (AppTitleBar != null)
+                {
+                    window.SetTitleBar(AppTitleBar);
+                }
                 SetColor(RootUI.ActualTheme);
             }
             else
             {
                 window.ExtendsContentIntoTitleBar = true;
-                window.SetTitleBar(AppTitleBar);
+                if (AppTitleBar != null)
+                {
+                    window.SetTitleBar(AppTitleBar);
+                }
             }
         }
     }
