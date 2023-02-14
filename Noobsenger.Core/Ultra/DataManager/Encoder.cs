@@ -9,15 +9,17 @@ namespace Noobsenger.Core.Ultra.DataManager
     {
         public static byte[] ToBytes(this Data data)
         {
-            DataString byteData = new DataString();
-            byteData.Avatar = data.Avatar.ToString();
-            byteData.Message = data.Message.ToString();
-            byteData.ClientName = data.ClientName;
-            byteData.DataType = data.DataType.ToString();
-            byteData.InfoCode = data.InfoCode;
+            DataString byteData = new()
+            {
+                Avatar = data.Avatar.ToString(),
+                Message = data.Message.ToString(),
+                ClientName = data.ClientName,
+                DataType = data.DataType.ToString(),
+                InfoCode = data.InfoCode
+            };
             if (data.Uploads != null)
             {
-                List<string> uploads = new List<string>();
+                List<string> uploads = new();
                 foreach (var item in data.Uploads)
                 {
                     uploads.Add(item.OriginalString);
@@ -32,11 +34,11 @@ namespace Noobsenger.Core.Ultra.DataManager
         {
             string str = Encoding.UTF8.GetString(arrBytes);
             DataString r = JsonConvert.DeserializeObject<DataString>(str);
-            Data data = new Data(r.ClientName, r.Message, (AvatarManager.Avatars)Enum.Parse(typeof(AvatarManager.Avatars), r.Avatar), dataType: (DataType)Enum.Parse(typeof(DataType), r.DataType), infoCode: r.InfoCode);
+            Data data = new(r.ClientName, r.Message, (AvatarManager.Avatars)Enum.Parse(typeof(AvatarManager.Avatars), r.Avatar), dataType: (DataType)Enum.Parse(typeof(DataType), r.DataType), infoCode: r.InfoCode);
             if (data.Uploads != null)
             {
 
-                List<Uri> uploads = new List<Uri>();
+                List<Uri> uploads = new();
                 foreach (var item in r.Uploads)
                 {
                     uploads.Add(new Uri(item));

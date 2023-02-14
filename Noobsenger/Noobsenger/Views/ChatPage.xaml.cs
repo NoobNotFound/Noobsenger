@@ -23,7 +23,9 @@ using Noobsenger.Core.Ultra.DataManager;
 using Windows.UI.Notifications;
 using Windows.Storage;
 using System.Globalization;
-
+using NoobNotFound.WinUI.Common;
+using NoobNotFound.WinUI.Common.UI.Controls;
+using Microsoft.UI.Xaml.Media.Imaging;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -36,6 +38,7 @@ namespace Noobsenger.Views
     {
         public IClient Client { get; set; }
         public ObservableCollection<Message> Messages { get; set; } = new();
+        public ObservableCollection<NoobNotFound.WinUI.Common.Helpers.Tenor.JSON.SearchResult.Result> ImageUploads { get; set; } = new();
         public bool IsUltra { get; set; }
         public ChatPage()
         {
@@ -46,10 +49,13 @@ namespace Noobsenger.Views
         {
             IsUltra = true;
             this.Client = channelClient;
+            TenorFlyout.ItemInvoked += TenorFlyout_ItemInvoked;
             Client.NameChanged += Client_ServerNameChanged;
             Client.ChatRecieved += Client_ChatRecieved;
             this.InitializeComponent();
         }
+
+
         int msgCount = 0;
         private void Client_ChatRecieved(object sender, IData e)
         {
@@ -195,12 +201,14 @@ namespace Noobsenger.Views
 
         private async void btnSend_Click(object sender, RoutedEventArgs e)
         {
+            var gifs = ImageUploads.Any() ? "\n\n"  + string.Join('\n', ImageUploads.Select(x => $"![GIF]({x.media_formats.tinygif.url})")) : "";
+            ImageUploads.Clear();
             if (!IsUltra)
             {
                 if (!string.IsNullOrWhiteSpace(txtMessage.Text))
                 {
                     this.IsEnabled = false;
-                    await Client.SendMessage(new ChatData(Client.UserName, txtMessage.Text, Client.Avatar, dataType: DataType.Chat));
+                    await Client.SendMessage(new ChatData(Client.UserName, txtMessage.Text + gifs, Client.Avatar, dataType: DataType.Chat));
                     txtMessage.Text = "";
                     this.IsEnabled = true;
                     txtMessage.Focus(FocusState.Programmatic);
@@ -211,12 +219,13 @@ namespace Noobsenger.Views
                 if (!string.IsNullOrWhiteSpace(txtMessage.Text))
                 {
                     this.IsEnabled = false;
-                    await Client.SendMessage(new Data(Client.UserName, txtMessage.Text, Client.Avatar, dataType: DataType.Chat));
+                    await Client.SendMessage(new Data(Client.UserName, txtMessage.Text + gifs, Client.Avatar, dataType: DataType.Chat));
                     txtMessage.Text = "";
                     this.IsEnabled = true;
                     txtMessage.Focus(FocusState.Programmatic);
                 }
             }
+            txtMessage.Text = "";
         }
 
         private async void txtServerName_TextChanged(object sender, TextChangedEventArgs e)
@@ -318,10 +327,27 @@ namespace Noobsenger.Views
         private void KeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             btnSend_Click(null, null);
+            txtMessage.Text = "";
         }
 
+        private TenorFlyout TenorFlyout = new() { APIKey = "AIzaSyARqNY-2kB-gvNvhoPEdTgNa7WTSUT28qc"}; //This is my key please do not steal I'm begging you!
+        private void TenorFlyout_ItemInvoked(object sender, NoobNotFound.WinUI.Common.Helpers.Tenor.JSON.SearchResult.Result e)
+        {
+            ImageUploads.Add(e);
+        }
         private void btnGif_Click(object sender, RoutedEventArgs e)
-        { 
+        {
+            TenorFlyout.ShowAt(btnGif);
+        }
+
+        private void KeyboardAccelerator_Invoked_1(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            txtMessage.Text += "\n";
+        }
+
+        private void RemoveImage_Click(object sender, RoutedEventArgs e)
+        {
+            ImageUploads.Remove((sender as Button).DataContext as NoobNotFound.WinUI.Common.Helpers.Tenor.JSON.SearchResult.Result);
         }
     }
 }

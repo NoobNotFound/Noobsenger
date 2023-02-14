@@ -8,7 +8,7 @@
 
   <Identity
     Name="Noob.Messenger"
-    Publisher="CN=NooB"
+    Publisher="CN=NoobNotFound"
     Version="0.4.3.0" />
 
   <Properties>

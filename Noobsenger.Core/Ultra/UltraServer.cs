@@ -16,8 +16,9 @@ namespace Noobsenger.Core.Ultra
         public int Port;
         private string serverName;
 
-        public List<Channel> Channels = new List<Channel>();
+        public List<Channel> Channels = new();
         private int ChannelCount = 0;
+        public (bool GPT3, string OpenAIKey) GPT { get; private set; }
         public string ServerName
         {
             get { return serverName; }
@@ -27,7 +28,7 @@ namespace Noobsenger.Core.Ultra
                 BroadcastAll(ServerName, ServerName, DataType.InfoMessage, MsgCode: InfoCodes.ServerNameReceived);
             }
         }
-        public Hashtable ClientsList = new Hashtable();
+        public Hashtable ClientsList = new();
         private bool IsRuns = true;
         public bool IsHosted { get; private set; } = false;
         public TcpListener ServerSocket;
@@ -73,7 +74,7 @@ namespace Noobsenger.Core.Ultra
         {
             if (IsHosted)
             {
-                BroadcastAll(new Data(infoCode: InfoCodes.ServerClosed));
+                BroadcastAll(new Data(dataType:DataType.InfoMessage, infoCode: InfoCodes.ServerClosed));
                 this.IsRuns = false;
             }
         }
@@ -91,8 +92,9 @@ namespace Noobsenger.Core.Ultra
                 }
             }
         }
-        public void Host(IPAddress address, int port, string serverName)
+        public void Host(IPAddress address, int port, string serverName,(bool GPT3, string OpenAIKey) gpt)
         {
+            GPT = gpt;
             IsRuns = true;
             IsHosted = true;
             ServerName = serverName;
@@ -103,6 +105,12 @@ namespace Noobsenger.Core.Ultra
             ServerSocket.Start();
             var t = new Thread(Reciver);
             t.Start();
+            if (gpt.GPT3)
+            {
+                var c = new UltraClient();
+                c.Connect(address, port, "GPTNoob", AvatarManager.Avatars.OpenAI);
+                var GPT3 = new GPT3(gpt.OpenAIKey, c);
+            }
         }
         public void BroadcastAll(Data data)
         {
@@ -162,7 +170,7 @@ namespace Noobsenger.Core.Ultra
                         client.BytesRecieved += (sender, e) => BroadcastAll(e.Bytes, e.Length);
                         ClientsList.Add(ClientsCount, clientSocket);
                         client.Start();
-                        List<int> channelPorts = new List<int>();
+                        List<int> channelPorts = new();
                         foreach (var item in Channels)
                         {
                             channelPorts.Add(item.Port);

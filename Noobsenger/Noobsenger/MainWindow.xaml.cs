@@ -67,23 +67,6 @@ namespace Noobsenger
                 SetDragRegionForCustomTitleBar(this.ToAppWindow());
             }
         }
-        public void TriggerTitleBarRepaint()
-        {
-            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-            var activeWindow = Win32.GetActiveWindow();
-            if (hwnd == activeWindow)
-            {
-                Win32.SendMessage(hwnd, Win32.WM_ACTIVATE, Win32.WA_INACTIVE, IntPtr.Zero);
-                Win32.SendMessage(hwnd, Win32.WM_ACTIVATE, Win32.WA_ACTIVE, IntPtr.Zero);
-            }
-            else
-            {
-                Win32.SendMessage(hwnd, Win32.WM_ACTIVATE, Win32.WA_ACTIVE, IntPtr.Zero);
-                Win32.SendMessage(hwnd, Win32.WM_ACTIVATE, Win32.WA_INACTIVE, IntPtr.Zero);
-            }
-
-
-        }
 
         private void btnFrameBack_Click(object sender, RoutedEventArgs e)
         {

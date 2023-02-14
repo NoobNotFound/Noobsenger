@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:helpers="using:Noobsenger.Helpers" xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:results="using:NoobNotFound.WinUI.Common.Helpers.Tenor.JSON.SearchResult"
     Loaded="Page_Loaded">
 
     <Grid>
@@ -87,7 +88,9 @@
                                         <ColumnDefinition Width="auto"/>
                                         <ColumnDefinition Width="auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <Image Source="{x:Bind Avatar,Mode=OneWay}" Visibility="{x:Bind AvatarVisibility}" Width="40" Stretch="Uniform" Grid.Column="0"/>
+                                    <Border Grid.Column="0" CornerRadius="12">
+                                        <Image Source="{x:Bind Avatar,Mode=OneWay}" Visibility="{x:Bind AvatarVisibility}" Width="40" Stretch="Uniform"/>
+                                    </Border>
                                     <TextBlock Text="{x:Bind From,Mode=OneWay}" Visibility="{x:Bind AvatarVisibility}" VerticalAlignment="Center" FontSize="20" Margin="5,0" Grid.Column="1"/>
                                     <TextBlock Text="{x:Bind Time.ToShortTimeString(),Mode=OneWay}" HorizontalAlignment="{x:Bind HorizontalAlignment}" VerticalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="5,0" Grid.Column="2"/>
                                 </Grid>
@@ -98,64 +101,58 @@
                             </Grid>
                         </DataTemplate>
                     </helpers:ChatItemTemplateSelector.MessageTemplate>
-                    <helpers:ChatItemTemplateSelector.ImageTemplate>
-                        <DataTemplate x:DataType="helpers:MessageItem">
-                            <Grid CornerRadius="5" Padding="10" Margin="5,10,5,0" HorizontalAlignment="{x:Bind HorizontalAlignment}" Background="{x:Bind Background}">
-                                <Grid.ContextFlyout>
-                                    <MenuFlyout>
-                                        <MenuFlyoutItem Tag="{x:Bind Count}" Click="mitCopyMsg_Click" Text="Copy message"/>
-                                        <MenuFlyoutItem  Tag="{x:Bind Count}" Click="mitDelmsg_Click" Text="Delete message"/>
-                                    </MenuFlyout>
-                                </Grid.ContextFlyout>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid Grid.Row="0" HorizontalAlignment="Left">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition Width="auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Image Source="{x:Bind Avatar,Mode=OneWay}" Visibility="{x:Bind AvatarVisibility}" Width="40" Stretch="Uniform" Grid.Column="0"/>
-                                    <TextBlock Text="{x:Bind From,Mode=OneWay}" Visibility="{x:Bind AvatarVisibility}" VerticalAlignment="Center" FontSize="20" Margin="5,0" Grid.Column="1"/>
-                                    <TextBlock Text="{x:Bind Time.ToShortTimeString(),Mode=OneWay}" HorizontalAlignment="{x:Bind HorizontalAlignment}" VerticalAlignment="Center" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="5,0" Grid.Column="2"/>
-                                </Grid>
-                                <Grid Grid.Row="1" Margin="0,5,0,0" Padding="5">
-                                    <Image Source="{x:Bind Message}" Stretch="Uniform"/>
-                                </Grid>
-                            </Grid>
-                        </DataTemplate>
-                    </helpers:ChatItemTemplateSelector.ImageTemplate>
                 </helpers:ChatItemTemplateSelector>
             </ListView.ItemTemplateSelector>
         </ListView>
 
-        <Grid Margin="5" MinHeight="75" Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-            </Grid.ColumnDefinitions>
-            <TextBox AcceptsReturn="True" MaxHeight="400" x:Name="txtMessage" Grid.Column="0" IsSpellCheckEnabled="True" HorizontalAlignment="Stretch">
-                <TextBox.KeyboardAccelerators>
-                    <KeyboardAccelerator Modifiers="Shift" Key="Enter" Invoked="KeyboardAccelerator_Invoked"/>
-                </TextBox.KeyboardAccelerators>
-            </TextBox>
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Button>
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <GridView Padding="0" Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="7" ItemsSource="{x:Bind ImageUploads}" SelectionMode="None">
+                <GridView.ItemTemplate>
+                    <DataTemplate x:DataType="results:Result">
+                        <Grid CornerRadius="7" Margin="5,10">
+                            <Button
+                                Canvas.ZIndex="4"
+                                Click="RemoveImage_Click"
+                                VerticalAlignment="Top" 
+                                HorizontalAlignment="Right"
+                                Padding="7" 
+                                Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+                                BorderBrush="Transparent">
+                                <FontIcon Glyph=""/>
+                            </Button>
+                            <Image Width="110" Source="{x:Bind media_formats.mediumgif.url}"/>
+                        </Grid>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+            <Grid Margin="5" MinHeight="75" Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox MaxHeight="400" AcceptsReturn="True" x:Name="txtMessage" Grid.Column="0" IsSpellCheckEnabled="True" HorizontalAlignment="Stretch">
+                    <TextBox.KeyboardAccelerators>
+                        <KeyboardAccelerator Modifiers="None" Key="Enter" Invoked="KeyboardAccelerator_Invoked"/>
+                    </TextBox.KeyboardAccelerators>
+                </TextBox>
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
                     <Button VerticalAlignment="Stretch" Margin="5,0,0,0" x:Name="btnGif" Click="btnGif_Click" Grid.Column="2">
                         <FontIcon Glyph="&#xF4A9;"/>
                     </Button>
+                </Grid>
+                <Button VerticalAlignment="Stretch" Margin="5,0,0,0" x:Name="btnSend" Click="btnSend_Click" Grid.Column="2">
+                    <FontIcon FontSize="{ThemeResource TitleTextBlockFontSize}" FontWeight="SemiBold" Glyph="&#xe724;"/>
                 </Button>
             </Grid>
-            <Button VerticalAlignment="Stretch" Margin="5,0,0,0" x:Name="btnSend" Click="btnSend_Click" Grid.Column="2">
-                <FontIcon FontSize="{ThemeResource TitleTextBlockFontSize}" FontWeight="SemiBold" Glyph="&#xe724;"/>
-            </Button>
         </Grid>
     </Grid>
 </Page>

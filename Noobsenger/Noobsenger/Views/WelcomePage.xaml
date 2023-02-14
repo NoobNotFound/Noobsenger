@@ -52,6 +52,7 @@
                     Width="100"
                     Style="{ThemeResource AccentButtonStyle}" />
                 <Button
+                    x:Name="btnHost"
                     Click="btnJoin_Click"
                     Margin="5,0,0,0"
                     HorizontalAlignment="Center"

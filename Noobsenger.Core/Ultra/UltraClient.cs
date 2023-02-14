@@ -19,7 +19,7 @@ namespace Noobsenger.Core.Ultra
         public TcpClient clientSocket { get; set; } = new TcpClient();
         private NetworkStream serverStream = default;
         public string UserName { get; set; }
-        public List<ChannelClient> Channels = new List<ChannelClient>();
+        public List<ChannelClient> Channels = new();
         public AvatarManager.Avatars Avatar { get; set; }
         public string ServerName { get; set; }
         public IPAddress IP { get; private set; }

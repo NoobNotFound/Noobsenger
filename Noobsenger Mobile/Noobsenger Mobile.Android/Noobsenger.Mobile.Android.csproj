@@ -110,12 +110,6 @@
     <AndroidResource Include="Resources\mipmap-xxxhdpi\launcher_foreground.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Noobsenger Mobile\Noobsenger.Mobile.csproj">
-      <Project>{8C3927AF-DF4D-48B6-AA70-A2042273FCC6}</Project>
-      <Name>Noobsenger.Mobile</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <AndroidResource Include="Resources\drawable\icon.png" />
   </ItemGroup>
   <ItemGroup>

@@ -22,18 +22,19 @@ namespace Noobsenger.Helpers
                 titlebar.ExtendsContentIntoTitleBar = true;
                 void SetColor(ElementTheme acualTheme)
                 {
-                    titlebar.ButtonHoverBackgroundColor = App.LayerFillColorDefaultColor;
-                    titlebar.ButtonBackgroundColor = titlebar.ButtonInactiveBackgroundColor = Colors.Transparent;
+                    titlebar.ButtonBackgroundColor = titlebar.ButtonInactiveBackgroundColor = titlebar.ButtonPressedBackgroundColor = Colors.Transparent;
                     switch (acualTheme)
                     {
                         case ElementTheme.Dark:
+                            titlebar.ButtonHoverBackgroundColor = Colors.Black;
                             titlebar.ButtonForegroundColor = Colors.White;
-                            titlebar.ButtonHoverForegroundColor = Colors.Silver;
+                            titlebar.ButtonHoverForegroundColor = Colors.White;
                             titlebar.ButtonPressedForegroundColor = Colors.Silver;
                             break;
                         case ElementTheme.Light:
+                            titlebar.ButtonHoverBackgroundColor = Colors.White;
                             titlebar.ButtonForegroundColor = Colors.Black;
-                            titlebar.ButtonHoverForegroundColor = Colors.DarkGray;
+                            titlebar.ButtonHoverForegroundColor = Colors.Black;
                             titlebar.ButtonPressedForegroundColor = Colors.DarkGray;
                             break;
                     }

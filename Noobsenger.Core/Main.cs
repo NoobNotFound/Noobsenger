@@ -14,15 +14,15 @@ namespace Noobsenger.Core
 {
     public class InfoCodes
     {
-        public const string Join = "IC1";
-        public const string ServerNameReceived = "IC2";
-        public const string Left = "IC3";
-        public const string AddChannel = "IC4";
-        public const string RemoveChannel = "IC5";
-        public const string AddChannels = "IC6";
-        public const string ServerClosed = "IC7";
-        public const string ChannelClosed = "IC8";
-        public const string ImgFromWeb = "IC9";
+        public static string Join { get; set; } = "IC1";
+        public static string ServerNameReceived { get; set; } = "IC2";
+        public static string Left { get; set; } = "IC3";
+        public static string AddChannel { get; set; } = "IC4";
+        public static string RemoveChannel { get; set; } = "IC5";
+        public static string AddChannels { get; set; } = "IC6";
+        public static string ServerClosed  { get; set; } = "IC7";
+        public static string ChannelClosed { get; set; } = "IC8";
+        public static string ImgFromWeb { get; set; } = "IC9";
     }
     public static class AvatarManager
     {
@@ -39,7 +39,8 @@ namespace Noobsenger.Core
             Sir,
             Woman,
             Woman1,
-            Woman2
+            Woman2,
+            OpenAI
         }
     }
     public static class Util
@@ -48,7 +49,7 @@ namespace Noobsenger.Core
         public static List<T> GetEnumList<T>()
         {
             T[] array = (T[])Enum.GetValues(typeof(T));
-            List<T> list = new List<T>(array);
+            List<T> list = new(array);
             return list;
         }
         public static List<IPAddress> GetIPAddresses()
@@ -87,7 +88,7 @@ namespace Noobsenger.Core
                 BroadcastAll(ServerName, ServerName, DataType.InfoMessage, MsgCode: InfoCodes.ServerNameReceived);
             }
         }
-        public static Hashtable ClientsList = new Hashtable();
+        public static Hashtable ClientsList = new();
         public static bool IsRuns = true;
         public static bool IsHosted = false;
         public static TcpListener ServerSocket;
@@ -167,7 +168,7 @@ namespace Noobsenger.Core
             {
                 ClientSocket = inClientSocket;
                 clNo = clineNo;
-                Thread ctThread = new Thread(doChat);
+                Thread ctThread = new(doChat);
                 ctThread.Start();
             }
 

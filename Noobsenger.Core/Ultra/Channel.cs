@@ -2,12 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Noobsenger.Core.Ultra.DataManager;
+using OpenAI_API;
+using OpenAI_API.Completions;
+using OpenAI_API.Models;
+
 namespace Noobsenger.Core.Ultra
 {
     public class Channel
@@ -16,7 +22,7 @@ namespace Noobsenger.Core.Ultra
         private int ClientsCount = 0;
         public IPAddress IP { get; set; }
         public int Port { get; set; }
-        private ObservableCollection<ClientHandler> ClientHandlersList = new ObservableCollection<ClientHandler>();
+        private ObservableCollection<ClientHandler> ClientHandlersList = new();
         private string serverName;
         public int MessagesCount { get; private set; }
         public string ChannelName
@@ -65,14 +71,14 @@ namespace Noobsenger.Core.Ultra
                 clientSocket = ServerSocket.AcceptTcpClient();
 
                 byte[] bytesFrom = new byte[10025];
-                ChatData dataFromClient;
+                Data dataFromClient;
 
                 NetworkStream networkStream = clientSocket.GetStream();
                 networkStream.Read(bytesFrom, 0, bytesFrom.Length);
-                dataFromClient = DataEncoder.ByteArrayToData(bytesFrom);
+                dataFromClient = bytesFrom.ToData();
 
                 if (dataFromClient.DataType == DataType.InfoMessage)
-                {
+                {  
                     if (dataFromClient.InfoCode == InfoCodes.Join)
                     {
                         ClientsCount++;
@@ -176,13 +182,13 @@ namespace Noobsenger.Core.Ultra
             ClientNumber = clientNumber;
             if (start)
             {
-                Thread ctThread = new Thread(GetData);
+                Thread ctThread = new(GetData);
                 ctThread.Start();
             }
         }
         public void Start()
         {
-            Thread ctThread = new Thread(GetData);
+            Thread ctThread = new(GetData);
             ctThread.Start();
         }
         private void GetData()
@@ -217,4 +223,5 @@ namespace Noobsenger.Core.Ultra
         }
 
     }
+    
 }
