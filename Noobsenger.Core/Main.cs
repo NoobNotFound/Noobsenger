@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Noobsenger.Core.Interfaces;
+using Noobsenger.Core.Ultra.DataManager;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +14,15 @@ namespace Noobsenger.Core
 {
     public class InfoCodes
     {
-        public const string Join = "IC1";
-        public const string ServerNameReceived = "IC2";
+        public static string Join { get; set; } = "IC1";
+        public static string ServerNameReceived { get; set; } = "IC2";
+        public static string Left { get; set; } = "IC3";
+        public static string AddChannel { get; set; } = "IC4";
+        public static string RemoveChannel { get; set; } = "IC5";
+        public static string AddChannels { get; set; } = "IC6";
+        public static string ServerClosed  { get; set; } = "IC7";
+        public static string ChannelClosed { get; set; } = "IC8";
+        public static string ImgFromWeb { get; set; } = "IC9";
     }
     public static class AvatarManager
     {
@@ -30,7 +39,8 @@ namespace Noobsenger.Core
             Sir,
             Woman,
             Woman1,
-            Woman2
+            Woman2,
+            OpenAI
         }
     }
     public static class Util
@@ -39,7 +49,7 @@ namespace Noobsenger.Core
         public static List<T> GetEnumList<T>()
         {
             T[] array = (T[])Enum.GetValues(typeof(T));
-            List<T> list = new List<T>(array);
+            List<T> list = new(array);
             return list;
         }
         public static List<IPAddress> GetIPAddresses()
@@ -78,7 +88,7 @@ namespace Noobsenger.Core
                 BroadcastAll(ServerName, ServerName, DataType.InfoMessage, MsgCode: InfoCodes.ServerNameReceived);
             }
         }
-        public static Hashtable ClientsList = new Hashtable();
+        public static Hashtable ClientsList = new();
         public static bool IsRuns = true;
         public static bool IsHosted = false;
         public static TcpListener ServerSocket;
@@ -158,7 +168,7 @@ namespace Noobsenger.Core
             {
                 ClientSocket = inClientSocket;
                 clNo = clineNo;
-                Thread ctThread = new Thread(doChat);
+                Thread ctThread = new(doChat);
                 ctThread.Start();
             }
 
@@ -193,11 +203,11 @@ namespace Noobsenger.Core
             //end doChat
         }
     }
-    public class Client
+    public class Client : IClient
     {
-        public event EventHandler<ChatData> ChatRecieved = delegate { };
-        public event EventHandler ServerNameChanged = delegate { };
-        private TcpClient clientSocket = new TcpClient();
+        public event EventHandler<IData> ChatRecieved = delegate { };
+        public event EventHandler NameChanged = delegate { };
+        public TcpClient clientSocket { get; set; } = new TcpClient();
         private NetworkStream serverStream = default;
         public string UserName { get; set; }
         public AvatarManager.Avatars Avatar { get; set; }
@@ -219,12 +229,22 @@ namespace Noobsenger.Core
             await serverStream.FlushAsync();
 
         }
-        public async Task SendMessage(ChatData data)
+        public async Task SendMessage(IData data)
         {
-            byte[] outStream = DataEncoder.DataToByteArray(data);
-            await serverStream.WriteAsync(outStream, 0, outStream.Length);
-            serverStream.Flush();
-            await serverStream.FlushAsync();
+            if (data is ChatData d)
+            {
+                byte[] outStream = DataEncoder.DataToByteArray(d);
+                await serverStream.WriteAsync(outStream, 0, outStream.Length);
+                serverStream.Flush();
+                await serverStream.FlushAsync();
+            }
+            else
+            {
+                byte[] outStream = ((Data)data).ToBytes();
+                await serverStream.WriteAsync(outStream, 0, outStream.Length);
+                serverStream.Flush();
+                await serverStream.FlushAsync();
+            }
         }
         private void GetMessage()
         {
@@ -255,7 +275,7 @@ namespace Noobsenger.Core
                         if (returndata.InfoCode == InfoCodes.ServerNameReceived)
                         {
                             this.ServerName = returndata.Message;
-                            ServerNameChanged.Invoke(this, new EventArgs());
+                            NameChanged.Invoke(this, new EventArgs());
                         }
                         else if (returndata.InfoCode == InfoCodes.Join)
                         {

@@ -25,13 +25,13 @@
 	<key>CFBundleDisplayName</key>
 	<string>Noobsenger Mobile</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.Noob.Noobsenger_Mobile</string>
+	<string>com.Noob.Noobsenger.Mobile</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
-	<string>Noobsenger_Mobile</string>
+	<string>Noobsenger.Mobile</string>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcons.appiconset</string>
 	<key>CFBundleShortVersionString</key>

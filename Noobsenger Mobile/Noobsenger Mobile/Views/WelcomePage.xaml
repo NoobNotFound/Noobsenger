@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Noobsenger_Mobile.Views.WelcomePage"
-             BackgroundColor="{AppThemeBinding Dark=#202020,Light=#f3f3f3}">
+             x:Class="Noobsenger.Mobile.Views.WelcomePage"
+             BackgroundColor="{AppThemeBinding Dark={StaticResource DarkBackground},Light={StaticResource LightBackground}}">
     <ContentPage.Content>
         <StackLayout
             HorizontalOptions="Center"
             VerticalOptions="Center">
             <Label
-                 TextColor="{AppThemeBinding Dark=White,Light=#757575}"
+                 
                 FontSize="25"
                 HorizontalOptions="Center"
                 Text="Welcome to" />
@@ -18,14 +18,13 @@
                     HorizontalOptions="Center"
                     Source="icon.png" />
                 <Label
-                 TextColor="{AppThemeBinding Dark=White,Light=Black}"
                     HorizontalOptions="Center"
                     VerticalOptions="Center"
                     FontSize="32"
                     Text="Noobsenger" />
             </StackLayout>
             <Label
-                 TextColor="{AppThemeBinding Dark=White,Light=#757575}"
+                 
                 HorizontalOptions="Center"
                 HorizontalTextAlignment="Center"
                 Text="First of all, host or join a server." />
@@ -34,12 +33,13 @@
                 HorizontalOptions="Center"
                 Orientation="Horizontal">
                 <Button
-                    
+                    Style="{StaticResource AccentButtonStyle}"
                         Clicked="btnHost_Clicked"
                     HorizontalOptions="Center"
                     Text="Host" />
                 <Button
                     
+                    Style="{StaticResource AccentButtonStyle}"
                         Clicked="btnJoin_Clicked"
                     Margin="5,0,0,0"
                     HorizontalOptions="Center"

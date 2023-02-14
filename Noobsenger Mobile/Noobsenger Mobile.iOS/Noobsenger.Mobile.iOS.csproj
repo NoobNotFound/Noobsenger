@@ -155,12 +155,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\Noobsenger Mobile\Noobsenger Mobile.csproj">
-      <Project>{94F0DDD3-21FB-47C4-BA7D-22FB0E83065B}</Project>
-      <Name>Noobsenger Mobile</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="image.ico" />
   </ItemGroup>
 </Project>

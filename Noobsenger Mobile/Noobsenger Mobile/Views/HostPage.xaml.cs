@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Noobsenger_Mobile.Views
+namespace Noobsenger.Mobile.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class HostPage : ContentPage
@@ -35,9 +35,11 @@ namespace Noobsenger_Mobile.Views
                 return;
             }
 
-            if (cmbxIps.SelectedItem != null && !string.IsNullOrEmpty(txtName.Text.Replace(" ", "")) && int.Parse( nbrPort.Text) > 1023 && int.Parse(nbrPort.Text) < 49152)
+            if (cmbxIps.SelectedItem != null && !string.IsNullOrEmpty(txtName.Text.Replace(" ", "")) && int.Parse(nbrPort.Text) > 1023 && int.Parse(nbrPort.Text) < 49152)
             {
-                Server.Host((System.Net.IPAddress)cmbxIps.SelectedItem, Convert.ToInt32(nbrPort.Text), txtName.Text);
+                Server.IP = (System.Net.IPAddress)cmbxIps.SelectedItem;
+                Server.Port = Convert.ToInt32(nbrPort.Text);
+                App.UltraServer.Host((System.Net.IPAddress)cmbxIps.SelectedItem, Convert.ToInt32(nbrPort.Text), txtName.Text);
                 Application.Current.MainPage = new LoginPage();
             }
             else

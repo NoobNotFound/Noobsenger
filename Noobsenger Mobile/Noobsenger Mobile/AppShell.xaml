@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Shell xmlns="http://xamarin.com/schemas/2014/forms" 
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-       xmlns:local="clr-namespace:Noobsenger_Mobile.Views"
+       xmlns:local="clr-namespace:Noobsenger.Mobile.Views"
        Title="Noobsenger Mobile"
        IsVisible="False"
-       x:Class="Noobsenger_Mobile.AppShell">
+       x:Class="Noobsenger.Mobile.AppShell">
 
     <!--
         The overall app visual hierarchy is defined here, along with navigation.

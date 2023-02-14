@@ -1,0 +1,64 @@
+﻿<Page
+    x:Class="Noobsenger.Views.UltraChatPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Noobsenger.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Loaded="Page_Loaded">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <NavigationView x:Name="navView" Grid.Row="1" ItemInvoked="navView_ItemInvoked" IsBackButtonVisible="Collapsed" PaneDisplayMode="Auto" IsPaneToggleButtonVisible="False">
+            <NavigationView.PaneCustomContent>
+                <Button Margin="3,2" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" BorderThickness="0" Background="Transparent"  Padding="7" x:Name="btnMitAddChannel" Click="btnMitAddChannel_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon Margin="5,0,0,0" Glyph="&#xe948;"/>
+                        <TextBlock Margin="10,0,0,0" Text="Add a new channel"/>
+                    </StackPanel>
+                    <Button.Flyout>
+                        <Flyout x:Name="addNewFly" Placement="Bottom">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox x:Name="txtAddNewServer" PlaceholderText="Enter a name"/>
+                                <Button VerticalAlignment="Center" Margin="5,0,0,0" Content="Add" Click="btnAddChannel_Click"/>
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+            </NavigationView.PaneCustomContent>
+            <NavigationView.PaneFooter>
+                <Button Padding="7" Margin="0,0,5,0" HorizontalAlignment="Right">
+                    <FontIcon FontSize="14" Glyph="&#xe946;"/>
+                    <Button.Flyout>
+                        <Flyout>
+                            <Grid>
+                                <StackPanel>
+                                    <TextBlock FontSize="18" FontWeight="SemiBold" Text="Server Info"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                        <TextBlock VerticalAlignment="Center" Text="IP:" Width="50"/>
+                                        <TextBlock VerticalAlignment="Center" x:Name="txtIP" TextTrimming="CharacterEllipsis" Width="120" Margin="5,0"/>
+                                        <Button VerticalAlignment="Center" x:Name="btnCopyIP" Click="btnCopyIP_Click" Padding="7" ToolTipService.ToolTip="Copy">
+                                            <FontIcon Glyph="&#xe8c8;"/>
+                                        </Button>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                        <TextBlock VerticalAlignment="Center" Text="Port:" Width="50"/>
+                                        <TextBlock VerticalAlignment="Center" x:Name="txtPort" Width="120" Margin="5,0"/>
+                                        <Button VerticalAlignment="Center" x:Name="btnCopyPort" Click="btnCopyPort_Click" Padding="7" ToolTipService.ToolTip="Copy">
+                                            <FontIcon Glyph="&#xe8c8;"/>
+                                        </Button>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+            </NavigationView.PaneFooter>
+            <Frame x:Name="ChatFrame"/>
+        </NavigationView>
+    </Grid>
+</Page>

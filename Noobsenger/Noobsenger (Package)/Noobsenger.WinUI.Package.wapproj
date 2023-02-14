@@ -41,15 +41,15 @@
     <AssetTargetFallback>net6.0-windows$(TargetPlatformVersion);$(AssetTargetFallback)</AssetTargetFallback>
     <DefaultLanguage>en-US</DefaultLanguage>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <EntryPointProjectUniqueName>..\Noobsenger\Noobsenger.csproj</EntryPointProjectUniqueName>
     <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
-    <PackageCertificateThumbprint>1D53ED1DA748787FBD30076B4DD221562B001F3B</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>63553A1403CDD4894E024CB759853DA372ABCA1C</PackageCertificateThumbprint>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
-    <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
-    <AppInstallerUri>C:\</AppInstallerUri>
+    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
+    <AppInstallerUri>D:\Projects\Noobsenger\Noobsenger\Noobsenger %28Package%29\AppPackages</AppInstallerUri>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <EntryPointProjectUniqueName>..\Noobsenger\Noobsenger.WinUI.csproj</EntryPointProjectUniqueName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm64'">
     <AppxBundle>Always</AppxBundle>
@@ -75,6 +75,7 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="icon.png" />
     <Content Include="Images\LargeTile.scale-100.png" />
     <Content Include="Images\LargeTile.scale-125.png" />
     <Content Include="Images\LargeTile.scale-150.png" />
@@ -126,18 +127,19 @@
     <Content Include="Images\Wide310x150Logo.scale-150.png" />
     <Content Include="Images\Wide310x150Logo.scale-200.png" />
     <Content Include="Images\Wide310x150Logo.scale-400.png" />
+    <None Include="Noobsenger.WinUI.Package_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Noobsenger\Noobsenger.csproj">
+    <ProjectReference Include="..\Noobsenger\Noobsenger.WinUI.csproj">
       <SkipGetTargetFrameworkProperties>True</SkipGetTargetFrameworkProperties>
       <PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.2">
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1">
       <IncludeAssets>build</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.1">
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.25267-preview">
       <IncludeAssets>build</IncludeAssets>
     </PackageReference>
   </ItemGroup>

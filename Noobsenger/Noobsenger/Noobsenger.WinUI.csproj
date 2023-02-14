@@ -1,7 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
+	  <TargetFramework>net7.0-windows10.0.22000.0</TargetFramework>
+	  <ImplicitUsings>enable</ImplicitUsings>
+	  <Nullable>enable</Nullable>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <RootNamespace>Noobsenger</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -14,11 +16,13 @@
 		<Content Include="Images\icon.png" />
 	</ItemGroup>
   <ItemGroup>
+    <None Remove="MessageToast.txt" />
     <None Remove="UserControls\TitleBar.xaml" />
     <None Remove="Views\ChatPage.xaml" />
     <None Remove="Views\HostPage.xaml" />
     <None Remove="Views\JoinPage.xaml" />
     <None Remove="Views\Login.xaml" />
+    <None Remove="Views\UltraChatPage.xaml" />
     <None Remove="Views\WelcomePage.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -37,17 +41,32 @@
 		<Content Include="Images\Avatars\Woman.png" />
 		<Content Include="Images\Avatars\Woman1.png" />
 		<Content Include="Images\Avatars\Woman2.png" />
+		<Content Include="MessageToast.txt" />
 	</ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Markdown" Version="7.1.2" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.2" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.1" />
+	  <PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.1.2" />
+	  <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
+	  <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
+	  <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.25267-preview" />
+	  <PackageReference Include="PInvoke.User32" Version="0.7.124" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\NoobNotFound.WinUI\NoobNotFound.WinUI.Common\NoobNotFound.WinUI.Common.csproj" />
     <ProjectReference Include="..\..\Noobsenger.Core\Noobsenger.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Images\iconCopy.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\UltraChatPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

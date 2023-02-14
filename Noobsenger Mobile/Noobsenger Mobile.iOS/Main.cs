@@ -5,7 +5,7 @@ using System.Linq;
 using Foundation;
 using UIKit;
 
-namespace Noobsenger_Mobile.iOS
+namespace Noobsenger.Mobile.iOS
 {
     public class Application
     {

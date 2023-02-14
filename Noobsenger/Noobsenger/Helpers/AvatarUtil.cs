@@ -12,6 +12,10 @@ namespace Noobsenger.Helpers
 {
     public static class AvatarUtil
     {
+        public static string AvatarToPathString(Avatars avatar)
+        {
+            return @"ms-appx:///Images/Avatars/" + avatar.ToString() + ".png";
+        }
         public static async Task<BitmapImage> AvatarToBitmap(Avatars avatar)
         {
             var f = await StorageFile.GetFileFromApplicationUriAsync(new Uri(@"ms-appx:///Images/Avatars/" + avatar.ToString() + ".png"));

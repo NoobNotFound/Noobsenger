@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:models="clr-namespace:Noobsenger_Mobile.Models"
-             xmlns:helpers="clr-namespace:Noobsenger_Mobile.Helpers"
-             x:Class="Noobsenger_Mobile.Views.ChatPage"
-             BackgroundColor="{AppThemeBinding Dark=#202020,Light=#f3f3f3}">
+             xmlns:models="clr-namespace:Noobsenger.Mobile.Models"
+             xmlns:helpers="clr-namespace:Noobsenger.Mobile.Helpers"
+             x:Class="Noobsenger.Mobile.Views.ChatPage"
+             BackgroundColor="{AppThemeBinding Dark={StaticResource DarkBackground},Light={StaticResource LightBackground}}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -19,10 +19,10 @@
                     <helpers:ChatItemTemplateSelector.InfoTemplate>
                         <DataTemplate x:DataType="models:InfoItem">
                             <Grid HorizontalOptions="CenterAndExpand">
-                                <Frame CornerRadius="10" BackgroundColor="Silver" Margin="0,10,0,0" HorizontalOptions="Center" Padding="20,10">
+                                <Frame HasShadow="False" CornerRadius="10" BackgroundColor="{AppThemeBinding Light=#f2f2f2,Dark=#454545}" Margin="0,10,0,0" HorizontalOptions="Center" Padding="20,10">
                                     <StackLayout HorizontalOptions="Center">
-                                        <Label TextColor="White" FontSize="Small" HorizontalOptions="Center" Text="{x:Binding TimeString}"/>
-                                        <Label Text="{x:Binding Info}" TextColor="Black" VerticalOptions="Center" HorizontalOptions="Center"/>
+                                        <Label TextColor="Gray" FontSize="Small" HorizontalOptions="Center" Text="{x:Binding TimeString}"/>
+                                        <Label Text="{x:Binding Info}" TextColor="{AppThemeBinding Dark=White,Light=Black}" VerticalOptions="Center" HorizontalOptions="Center"/>
                                     </StackLayout>
                                 </Frame>
                             </Grid>
@@ -31,7 +31,7 @@
                     <helpers:ChatItemTemplateSelector.MessageTemplate>
                         <DataTemplate x:DataType="models:MessageItem">
                             <Grid HorizontalOptions="CenterAndExpand">
-                                <Frame Padding="10" CornerRadius="15" Margin="0,10,5,0" BackgroundColor="{x:Binding Background}" HorizontalOptions="{x:Binding HorizontalAlignment}">
+                                <Frame HasShadow="False" Padding="10" CornerRadius="15" Margin="5,10,5,0" Style="{x:Binding IsMe,Converter={StaticResource BoolToMessageFrameStyle}}" HorizontalOptions="{x:Binding HorizontalAlignment}">
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="auto"/>
@@ -44,11 +44,11 @@
                                                 <ColumnDefinition Width="auto"/>
                                             </Grid.ColumnDefinitions>
                                             <Image Source="{x:Binding Avatar,Mode=OneWay}" IsVisible="{x:Binding AvatarVisibility}" WidthRequest="40" Grid.Column="0"/>
-                                            <Label Text="{x:Binding From,Mode=OneWay}" IsVisible="{x:Binding AvatarVisibility}" VerticalOptions="Center" FontSize="20" Margin="5,0" Grid.Column="1"/>
-                                            <Label FontSize="Caption" Text="{x:Binding TimeString,Mode=OneWay}" HorizontalOptions="{x:Binding HorizontalAlignment}" VerticalOptions="Center" TextColor="White" Margin="5,0" Grid.Column="2"/>
+                                            <Label Text="{x:Binding From,Mode=OneWay}" IsVisible="{x:Binding AvatarVisibility}" TextColor="{AppThemeBinding Dark=White,Light=Black}" VerticalOptions="Center" FontSize="20" Margin="5,0" Grid.Column="1"/>
+                                            <Label FontSize="Caption" Text="{x:Binding TimeString,Mode=OneWay}" HorizontalOptions="{x:Binding HorizontalAlignment}" VerticalOptions="Center" TextColor="{AppThemeBinding Dark=White,Light=Black}" Margin="5,0" Grid.Column="2"/>
                                         </Grid>
                                         <Grid Grid.Row="1" Margin="0,5,0,0">
-                                            <Label FontSize="Body" TextColor="Black" Text="{x:Binding Message,Mode=OneWay}"/>
+                                            <Label FontSize="Body" TextColor="{AppThemeBinding Dark=White,Light=Black}" Text="{x:Binding Message,Mode=OneWay}"/>
                                         </Grid>
                                     </Grid>
 
@@ -64,7 +64,8 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <Editor x:Name="txtMessage" Grid.Column="0" IsSpellCheckEnabled="True" HorizontalOptions="Fill"/>
+            <Editor
+                    PlaceholderColor="{AppThemeBinding Dark=#bcbcbc,Light=#8b8b8b}" Placeholder="Type a message here..." TextColor="{AppThemeBinding Dark=White,Light=Black}" x:Name="txtMessage" Grid.Column="0" IsSpellCheckEnabled="True" HorizontalOptions="Fill"/>
             <Button  VerticalOptions="Fill" Margin="5,0,0,0" x:Name="btnSend" Clicked="btnSend_Clicked" Text="Send" Grid.Column="1"/>
         </Grid>
     </Grid>
