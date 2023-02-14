@@ -1,13 +1,7 @@
 ﻿using Noobsenger.Core.Interfaces;
-using System;
-using System.Collections.Generic;
+using Noobsenger.Core.Ultra.DataManager;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Noobsenger.Core.Ultra.DataManager;
-using System.Linq;
 namespace Noobsenger.Core.Ultra
 {
     public class UltraClient : Interfaces.IClient
@@ -28,8 +22,8 @@ namespace Noobsenger.Core.Ultra
             IP = ip;
             await clientSocket.ConnectAsync(ip, port);
             serverStream = clientSocket.GetStream();
-            this.UserName = userName;
-            this.Avatar = avatar;
+            UserName = userName;
+            Avatar = avatar;
             Avatar = avatar;
             var ctThread = new Thread(GetMessage);
 
@@ -73,7 +67,7 @@ namespace Noobsenger.Core.Ultra
                         }
                         if (returndata.InfoCode == InfoCodes.ServerNameReceived)
                         {
-                            this.ServerName = returndata.Message;
+                            ServerName = returndata.Message;
                             NameChanged.Invoke(this, new EventArgs());
                         }
                         else if (returndata.InfoCode == InfoCodes.Join)
@@ -107,10 +101,10 @@ namespace Noobsenger.Core.Ultra
                         }
                         else if (returndata.InfoCode == InfoCodes.AddChannels)
                         {
-                            var chnls = returndata.Message.Split(':'); 
+                            var chnls = returndata.Message.Split(':');
                             foreach (var item in chnls)
                             {
-                                if (int.TryParse(item,out _))
+                                if (int.TryParse(item, out _))
                                 {
                                     var c = new ChannelClient();
                                     c.Connect(IP, int.Parse(item), UserName, Avatar);
@@ -174,8 +168,8 @@ namespace Noobsenger.Core.Ultra
             Port = port;
             await clientSocket.ConnectAsync(ip, port);
             serverStream = clientSocket.GetStream();
-            this.UserName = userName;
-            this.Avatar = avatar;
+            UserName = userName;
+            Avatar = avatar;
             Avatar = avatar;
             var ctThread = new Thread(GetMessage);
 
@@ -232,7 +226,7 @@ namespace Noobsenger.Core.Ultra
                     {
                         if (returndata.InfoCode == InfoCodes.ServerNameReceived)
                         {
-                            this.ChannelName = returndata.Message;
+                            ChannelName = returndata.Message;
                             NameChanged.Invoke(this, new EventArgs());
                         }
                         else if (returndata.InfoCode == InfoCodes.Join)

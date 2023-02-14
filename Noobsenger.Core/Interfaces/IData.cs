@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Noobsenger.Core.Interfaces
+﻿namespace Noobsenger.Core.Interfaces
 {
     public interface IData
     {

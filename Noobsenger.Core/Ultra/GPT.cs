@@ -1,12 +1,7 @@
-﻿using OpenAI_API.Completions;
-using OpenAI_API.Models;
+﻿using Noobsenger.Core.Ultra.DataManager;
 using OpenAI_API;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using System.Linq;
-using Noobsenger.Core.Ultra.DataManager;
+using OpenAI_API.Completions;
+using OpenAI_API.Models;
 
 namespace Noobsenger.Core.Ultra
 {
@@ -22,7 +17,7 @@ namespace Noobsenger.Core.Ultra
             {
                 Client.Channels.FirstOrDefault(x => x.Port == e).ChatRecieved += async (s, ce) =>
                 {
-                    if(ce.DataType == DataType.Chat)
+                    if (ce.DataType == DataType.Chat)
                     {
                         if (ce.DataType == DataType.Chat)
                         {
@@ -39,7 +34,7 @@ namespace Noobsenger.Core.Ultra
                         }
                     }
                 };
-                
+
             };
         }
 

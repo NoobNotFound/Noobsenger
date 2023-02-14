@@ -1,18 +1,8 @@
-﻿using System;
+﻿using Noobsenger.Core.Ultra.DataManager;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Noobsenger.Core.Ultra.DataManager;
-using OpenAI_API;
-using OpenAI_API.Completions;
-using OpenAI_API.Models;
 
 namespace Noobsenger.Core.Ultra
 {
@@ -40,7 +30,7 @@ namespace Noobsenger.Core.Ultra
         public TcpListener ServerSocket;
         public Channel(int Count)
         {
-            this.ChannelCount = Count;
+            ChannelCount = Count;
         }
         public bool Host(IPAddress address, int port, string serverName)
         {
@@ -78,7 +68,7 @@ namespace Noobsenger.Core.Ultra
                 dataFromClient = bytesFrom.ToData();
 
                 if (dataFromClient.DataType == DataType.InfoMessage)
-                {  
+                {
                     if (dataFromClient.InfoCode == InfoCodes.Join)
                     {
                         ClientsCount++;
@@ -131,7 +121,7 @@ namespace Noobsenger.Core.Ultra
 
                             }
                         }
-                        catch { } 
+                        catch { }
                     }
                 }
             }
@@ -153,7 +143,7 @@ namespace Noobsenger.Core.Ultra
                 broadcastStream.Flush();
             }
         }
-        public void BroadcastAll(byte[] data,int length)
+        public void BroadcastAll(byte[] data, int length)
         {
             foreach (DictionaryEntry Item in TcpClientsList)
             {
@@ -165,7 +155,7 @@ namespace Noobsenger.Core.Ultra
             }
         }
 
-        
+
     }
     internal class ClientHandler
     {
@@ -202,7 +192,7 @@ namespace Noobsenger.Core.Ultra
                     NetworkStream networkStream = ClientSocket.GetStream();
                     int l = networkStream.Read(bytesFrom, 0, bytesFrom.Length);
 
-                    this.BytesRecieved(this, new BytesRecievedEventArgs(bytesFrom, l));
+                    BytesRecieved(this, new BytesRecievedEventArgs(bytesFrom, l));
 
                 }
                 catch
@@ -223,5 +213,5 @@ namespace Noobsenger.Core.Ultra
         }
 
     }
-    
+
 }

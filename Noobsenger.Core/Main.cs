@@ -1,28 +1,22 @@
 ﻿using Noobsenger.Core.Interfaces;
 using Noobsenger.Core.Ultra.DataManager;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Noobsenger.Core
 {
     public class InfoCodes
     {
-        public static string Join { get; set; } = "IC1";
-        public static string ServerNameReceived { get; set; } = "IC2";
-        public static string Left { get; set; } = "IC3";
-        public static string AddChannel { get; set; } = "IC4";
-        public static string RemoveChannel { get; set; } = "IC5";
-        public static string AddChannels { get; set; } = "IC6";
-        public static string ServerClosed  { get; set; } = "IC7";
-        public static string ChannelClosed { get; set; } = "IC8";
-        public static string ImgFromWeb { get; set; } = "IC9";
+        public const string Join = "IC1";
+        public const string ServerNameReceived = "IC2";
+        public const string Left = "IC3";
+        public const string AddChannel = "IC4";
+        public const string RemoveChannel = "IC5";
+        public const string AddChannels = "IC6";
+        public const string ServerClosed = "IC7";
+        public const string ChannelClosed = "IC8";
     }
     public static class AvatarManager
     {
@@ -39,8 +33,7 @@ namespace Noobsenger.Core
             Sir,
             Woman,
             Woman1,
-            Woman2,
-            OpenAI
+            Woman2
         }
     }
     public static class Util
@@ -49,7 +42,7 @@ namespace Noobsenger.Core
         public static List<T> GetEnumList<T>()
         {
             T[] array = (T[])Enum.GetValues(typeof(T));
-            List<T> list = new(array);
+            List<T> list = new List<T>(array);
             return list;
         }
         public static List<IPAddress> GetIPAddresses()
@@ -88,7 +81,7 @@ namespace Noobsenger.Core
                 BroadcastAll(ServerName, ServerName, DataType.InfoMessage, MsgCode: InfoCodes.ServerNameReceived);
             }
         }
-        public static Hashtable ClientsList = new();
+        public static Hashtable ClientsList = new Hashtable();
         public static bool IsRuns = true;
         public static bool IsHosted = false;
         public static TcpListener ServerSocket;
@@ -134,7 +127,7 @@ namespace Noobsenger.Core
             clientSocket.Close();
             ServerSocket.Stop();
         }
-        public static void BroadcastAll(string msg, string uName, DataType type, AvatarManager.Avatars avatar = AvatarManager.Avatars.Gamer, Uri[] uploads = null, string MsgCode = null,int msgCount = 0)
+        public static void BroadcastAll(string msg, string uName, DataType type, AvatarManager.Avatars avatar = AvatarManager.Avatars.Gamer, Uri[] uploads = null, string MsgCode = null, int msgCount = 0)
         {
             foreach (DictionaryEntry Item in ClientsList)
             {
@@ -143,7 +136,7 @@ namespace Noobsenger.Core
                 NetworkStream broadcastStream = broadcastSocket.GetStream();
                 byte[] broadcastBytes;
 
-                broadcastBytes = DataEncoder.DataToByteArray(new ChatData(uName, msg, avatar: avatar, uploads: uploads, dataType: type, infoCode: MsgCode,count:msgCount));
+                broadcastBytes = DataEncoder.DataToByteArray(new ChatData(uName, msg, avatar: avatar, uploads: uploads, dataType: type, infoCode: MsgCode, count: msgCount));
 
                 broadcastStream.Write(broadcastBytes, 0, broadcastBytes.Length);
                 broadcastStream.Flush();
@@ -154,7 +147,7 @@ namespace Noobsenger.Core
             NetworkStream broadcastStream = broadcastSocket.GetStream();
             byte[] broadcastBytes;
             broadcastBytes = DataEncoder.DataToByteArray(new ChatData(uName, msg, avatar: avatar, uploads: uploads, dataType: type, infoCode: MsgCode));
-            broadcastStream.Write(broadcastBytes,0,broadcastBytes.Length);
+            broadcastStream.Write(broadcastBytes, 0, broadcastBytes.Length);
             broadcastStream.Flush();
         }
 
@@ -168,7 +161,7 @@ namespace Noobsenger.Core
             {
                 ClientSocket = inClientSocket;
                 clNo = clineNo;
-                Thread ctThread = new(doChat);
+                Thread ctThread = new Thread(doChat);
                 ctThread.Start();
             }
 
@@ -214,10 +207,10 @@ namespace Noobsenger.Core
         public string ServerName { get; set; }
         public async void Connect(IPAddress ip, int port, string userName, AvatarManager.Avatars avatar)
         {
-           await clientSocket.ConnectAsync(ip, port);
+            await clientSocket.ConnectAsync(ip, port);
             serverStream = clientSocket.GetStream();
-            this.UserName = userName;
-            this.Avatar = avatar;
+            UserName = userName;
+            Avatar = avatar;
             Avatar = avatar;
             var ctThread = new Thread(GetMessage);
 
@@ -260,7 +253,7 @@ namespace Noobsenger.Core
 
 
                     serverStream.Read(inStream, 0, inStream.Length);
-                    
+
                     returndata = DataEncoder.ByteArrayToData(inStream);
                 }
                 catch { }
@@ -274,7 +267,7 @@ namespace Noobsenger.Core
                     {
                         if (returndata.InfoCode == InfoCodes.ServerNameReceived)
                         {
-                            this.ServerName = returndata.Message;
+                            ServerName = returndata.Message;
                             NameChanged.Invoke(this, new EventArgs());
                         }
                         else if (returndata.InfoCode == InfoCodes.Join)

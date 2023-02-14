@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Noobsenger.Core.Ultra.DataManager
+﻿namespace Noobsenger.Core.Ultra.DataManager
 {
     public class Data : Interfaces.IData
     {
@@ -14,7 +10,7 @@ namespace Noobsenger.Core.Ultra.DataManager
         public Uri[] Uploads { get; set; }
         public DataType DataType { get; set; }
         public object[] Objects { get; set; }
-        public Data(string clientName = "", string message = "", AvatarManager.Avatars avatar = AvatarManager.Avatars.Gamer, Uri[] uploads = null, DataType dataType = DataType.Chat, string infoCode = null,object[] objects = null, int count = 0)
+        public Data(string clientName = "", string message = "", AvatarManager.Avatars avatar = AvatarManager.Avatars.Gamer, Uri[] uploads = null, DataType dataType = DataType.Chat, string infoCode = null, object[] objects = null, int count = 0)
         {
             ClientName = clientName;
             Message = message;
