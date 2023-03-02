@@ -39,7 +39,7 @@ namespace Noobsenger.Views
                 Server.Port = Convert.ToInt32(nbrPort.Value);
                 try
                 {
-                    App.UltraServer.Host((System.Net.IPAddress)cmbxIps.SelectedItem, Convert.ToInt32(nbrPort.Value), txtName.Text,(true, "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"));
+                    App.UltraServer.Host((System.Net.IPAddress)cmbxIps.SelectedItem, Convert.ToInt32(nbrPort.Value), txtName.Text);
                     MainWindow.DisableGoBack = true;
                     MainWindow.NavigateFrame(typeof(UltraChatPage));
                 }

@@ -12,9 +12,6 @@
     <UseWinUI>true</UseWinUI>
     <ApplicationIcon>image.ico</ApplicationIcon>
   </PropertyGroup>
-	<ItemGroup>
-		<Content Include="Images\icon.png" />
-	</ItemGroup>
   <ItemGroup>
     <None Remove="MessageToast.txt" />
     <None Remove="UserControls\TitleBar.xaml" />
@@ -55,12 +52,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\NoobNotFound.WinUI\NoobNotFound.WinUI.Common\NoobNotFound.WinUI.Common.csproj" />
     <ProjectReference Include="..\..\Noobsenger.Core\Noobsenger.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="Images\iconCopy.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>

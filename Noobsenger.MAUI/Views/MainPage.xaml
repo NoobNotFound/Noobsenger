@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Noobsenger.MAUI.Views.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Spacing="25"
+            Padding="30,0"
+            VerticalOptions="Center">
+            <Label
+                Text="Welcome to"
+                FontSize="24"
+                HorizontalOptions="Center" />
+            <Image
+                Source="icon.png"
+                HeightRequest="150"
+                HorizontalOptions="Center" />
+
+            <Label
+                Text="Noobsenger"
+                FontSize="32"
+                HorizontalOptions="Center" />
+
+            <Label
+                Text="First of all, host or join a server."
+                FontSize="Medium"
+                HorizontalOptions="Center" />
+
+            <StackLayout
+                Spacing="8"
+                HorizontalOptions="Center" 
+                Orientation="Horizontal">
+                <Button
+                    Clicked="btnHost_Clicked"
+                    FontAttributes="Bold"
+                    WidthRequest="100"
+                    x:Name="btnHost" 
+                    Text="Host" 
+                    Style="{StaticResource AccentButtonStyle}" />
+                <Button
+                    Clicked="btnJoin_Clicked"
+                    FontAttributes="Bold"
+                    WidthRequest="100"
+                    x:Name="btnJoin"
+                    Text="Join" 
+                    Style="{StaticResource AccentButtonStyle}" />
+            </StackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

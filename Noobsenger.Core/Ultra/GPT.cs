@@ -14,9 +14,9 @@ namespace Noobsenger.Core.Ultra
     {
         private UltraClient Client { get; set; }
         private OpenAIAPI API { get; set; }
-        public GPT3(string key, UltraClient client)
+        public GPT3(UltraClient client)
         {
-            API = new OpenAIAPI(key);
+            API = new OpenAIAPI();
             Client = client;
             Client.ChannelAdded += (_, e) =>
             {
@@ -26,12 +26,17 @@ namespace Noobsenger.Core.Ultra
                     {
                         if (ce.DataType == DataType.Chat)
                         {
-                            if (ce.Message.ToLower().StartsWith("\\gpt") || ce.Message.ToLower().StartsWith("/gpt"))
+                            if (ce.Message.ToLower().StartsWith("\\opanaikey") || ce.Message.ToLower().StartsWith("/opanaikey"))
+                            {
+                                API = new(ce.Message.ToLower().Replace("\\opanaikey ", "").Replace("/opanaikey ", ""));
+                                await Client.Channels.FirstOrDefault(x => x.Port == e).SendMessage(new Data(Client.UserName, "Sucess", Client.Avatar, dataType: DataType.Chat));
+                            }
+                            else if (ce.Message.ToLower().StartsWith("\\gpt") || ce.Message.ToLower().StartsWith("/gpt"))
                             {
                                 var m = await TextDavinci(ce.Message.Replace("\\gpt", "").Replace("\\GPT", "").Replace("\\Gpt", "").Replace("/gpt", "").Replace("/GPT", "").Replace("/Gpt", ""));
                                 await Client.Channels.FirstOrDefault(x => x.Port == e).SendMessage(new Data(Client.UserName, m, Client.Avatar, dataType: DataType.Chat));
                             }
-                            if (ce.Message.ToLower().StartsWith("\\codex") || ce.Message.ToLower().StartsWith("/codex"))
+                            else if (ce.Message.ToLower().StartsWith("\\codex") || ce.Message.ToLower().StartsWith("/codex"))
                             {
                                 var m = await Codex(ce.Message.Replace("\\codex", "").Replace("\\CODEX", "").Replace("\\Codex", "").Replace("/codex", "").Replace("/CODEX", "").Replace("/Codex", ""));
                                 await Client.Channels.FirstOrDefault(x => x.Port == e).SendMessage(new Data(Client.UserName, m, Client.Avatar, dataType: DataType.Chat));

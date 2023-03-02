@@ -18,7 +18,6 @@ namespace Noobsenger.Core.Ultra
 
         public List<Channel> Channels = new();
         private int ChannelCount = 0;
-        public (bool GPT3, string OpenAIKey) GPT { get; private set; }
         public string ServerName
         {
             get { return serverName; }
@@ -92,9 +91,8 @@ namespace Noobsenger.Core.Ultra
                 }
             }
         }
-        public void Host(IPAddress address, int port, string serverName,(bool GPT3, string OpenAIKey) gpt)
+        public void Host(IPAddress address, int port, string serverName)
         {
-            GPT = gpt;
             IsRuns = true;
             IsHosted = true;
             ServerName = serverName;
@@ -105,12 +103,10 @@ namespace Noobsenger.Core.Ultra
             ServerSocket.Start();
             var t = new Thread(Reciver);
             t.Start();
-            if (gpt.GPT3)
-            {
-                var c = new UltraClient();
-                c.Connect(address, port, "GPTNoob", AvatarManager.Avatars.OpenAI);
-                var GPT3 = new GPT3(gpt.OpenAIKey, c);
-            }
+            var c = new UltraClient();
+            c.Connect(address, port, "GPTNoob", AvatarManager.Avatars.OpenAI);
+            var GPT3 = new GPT3(c);
+
         }
         public void BroadcastAll(Data data)
         {
