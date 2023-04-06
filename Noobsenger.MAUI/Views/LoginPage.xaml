@@ -6,33 +6,32 @@
     <VerticalStackLayout
         VerticalOptions="FillAndExpand"
 			Padding="18"
+        Spacing="4"
 			HorizontalOptions="Center">
         <Label
 				FontSize="32"
 				Text="Login" />
-        <StackLayout
-				Margin="0,6,0,0"
-				Orientation="Horizontal">
+        <HorizontalStackLayout>
             <Label
             FontSize="Default"
-					Text="Username: "
-					VerticalOptions="Center"
-					WidthRequest="100" />
+					Text="Username"
+					WidthRequest="75"
+					VerticalOptions="Center" />
             <Entry
-                    Keyboard="Numeric"
-                    WidthRequest="100"
-                    x:Name="nbrPort" />
-        </StackLayout>
-        <StackLayout
-				Orientation="Horizontal">
+					MinimumWidthRequest="200"
+                    x:Name="txtUsername" />
+        </HorizontalStackLayout>
+        <HorizontalStackLayout>
             <Label
             FontSize="Default"
-					Text=": "
-					WidthRequest="100"
+					Text="Avatar "
+					WidthRequest="75"
 					VerticalOptions="Center" />
             <Picker
+                SelectedIndexChanged="cmbxAvatar_SelectedIndexChanged"
 					WidthRequest="200"
-					x:Name="cmbxIps" />
-        </StackLayout>
+					x:Name="cmbxAvatar" />
+        </HorizontalStackLayout>
+        <Image Margin="0,12,0,0" WidthRequest="150" HorizontalOptions="Center" x:Name="img"/>
     </VerticalStackLayout>
 </ContentPage>

@@ -7,38 +7,44 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using Noobsenger.Core.Ultra.DataManager;
+using OpenAI_API.Chat;
 
 namespace Noobsenger.Core.Ultra
 {
     internal class GPT3
     {
+        private ChatMessage GPTStart => new(ChatMessageRole.System, $"You are a chat bot inside a chat app called Noobsenger. Your name is GPTNoob. You were created by a developer called NoobNotFound. Answer friendly, creatively and shortly if posiible.");
         private UltraClient Client { get; set; }
         private OpenAIAPI API { get; set; }
+        private string OpenAIKey { get; set; }
         public GPT3(UltraClient client)
         {
             API = new OpenAIAPI();
             Client = client;
+            Client.ChannelRemoved += (_, e) => History.Remove(History.FirstOrDefault(x => x.Port == e));
             Client.ChannelAdded += (_, e) =>
             {
+                History.Add(new(e, new List<ChatMessage>() { GPTStart }));
                 Client.Channels.FirstOrDefault(x => x.Port == e).ChatRecieved += async (s, ce) =>
                 {
-                    if(ce.DataType == DataType.Chat)
+                    if(ce.DataType == DataType.Chat && ce.ClientName != "GPTNoob")
                     {
                         if (ce.DataType == DataType.Chat)
                         {
-                            if (ce.Message.ToLower().StartsWith("\\opanaikey") || ce.Message.ToLower().StartsWith("/opanaikey"))
+                            if (ce.Message.ToLower().StartsWith("\\openaikey") || ce.Message.ToLower().StartsWith("/openaikey"))
                             {
-                                API = new(ce.Message.ToLower().Replace("\\opanaikey ", "").Replace("/opanaikey ", ""));
+                                OpenAIKey = ce.Message.Remove(0, 11);
+                                API = new(OpenAIKey);
                                 await Client.Channels.FirstOrDefault(x => x.Port == e).SendMessage(new Data(Client.UserName, "Sucess", Client.Avatar, dataType: DataType.Chat));
                             }
                             else if (ce.Message.ToLower().StartsWith("\\gpt") || ce.Message.ToLower().StartsWith("/gpt"))
                             {
-                                var m = await TextDavinci(ce.Message.Replace("\\gpt", "").Replace("\\GPT", "").Replace("\\Gpt", "").Replace("/gpt", "").Replace("/GPT", "").Replace("/Gpt", ""));
+                                var m = await GPT(ce.Message.Replace("\\gpt", "").Replace("\\GPT", "").Replace("\\Gpt", "").Replace("/gpt", "").Replace("/GPT", "").Replace("/Gpt", ""), e);
                                 await Client.Channels.FirstOrDefault(x => x.Port == e).SendMessage(new Data(Client.UserName, m, Client.Avatar, dataType: DataType.Chat));
                             }
-                            else if (ce.Message.ToLower().StartsWith("\\codex") || ce.Message.ToLower().StartsWith("/codex"))
+                            else if (Client.Channels.FirstOrDefault(x => x.Port == e).QuickGPT)
                             {
-                                var m = await Codex(ce.Message.Replace("\\codex", "").Replace("\\CODEX", "").Replace("\\Codex", "").Replace("/codex", "").Replace("/CODEX", "").Replace("/Codex", ""));
+                                var m = await GPT(ce.Message, e);
                                 await Client.Channels.FirstOrDefault(x => x.Port == e).SendMessage(new Data(Client.UserName, m, Client.Avatar, dataType: DataType.Chat));
                             }
                         }
@@ -48,44 +54,38 @@ namespace Noobsenger.Core.Ultra
             };
         }
 
-        public async Task<string> Codex(string input)
-        {
-            try
-            {
-                string result = "";
-                await API.Completions.StreamCompletionAsync(new CompletionRequest(input, model: Model.DavinciCode, temperature: 0.6), x => result += x.ToString());
-                return result;
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
-        }
+        private List<(int Port, List<ChatMessage> History)> History = new();
 
-        public async Task<string> TextDavinci(string input)
+        public async Task<string> GPT(string input, int port)
         {
+            if (string.IsNullOrEmpty(OpenAIKey))
+                return "Please provide the API key first.";
+
+            var history = new List<ChatMessage>();
+
+            if (History.FirstOrDefault(x => x.Port == port).History.Count > 15)
+            {
+                History.FirstOrDefault(x => x.Port == port).History.Clear();
+                history.Add(GPTStart);
+            }
+
+            history.Add(new ChatMessage(ChatMessageRole.System, $"The current date is {DateTime.Now.ToShortDateString()}, and the time is {DateTime.Now.ToShortDateString()} right now. You must say this time if user asked."));
+            history.Add(new ChatMessage(ChatMessageRole.User, input));
             try
             {
-                var propmt = string.Join("\n", new string[]
+                var real = History.FirstOrDefault(x => x.Port == port).History;
+                real.AddRange(history);
+                var result = await API.Chat.CreateChatCompletionAsync(new ChatRequest()
                 {
-                "You are a chat bot inside a chat app called Noobsenger.",
-                "Your name is GPTNoob.",
-                "You were created by a developer called NoobNotFound.",
-                "You respond to queries users ask you they are called your input, which could be anything. Your goal is to be pleasant and welcoming.",
-                "User input may be multi-line, and you can respond with multiple lines as well. Here are some examples:",
-                "Input: Hi!",
-                "Your response: Hello! how can I help you?",
-                "Input: i don't like you",
-                "Also I'm bored",
-                "Your response: I like you! I hope I can grow on you",
-                "... hi bored, I'm dad!",
-                "Input: why is the sky blue?",
-                "Your response: As white light passes through our atmosphere, tiny air molecules cause it to 'scatter'. The scattering caused by these tiny air molecules (known as Rayleigh scattering) increases as the wavelength of light decreases. Violet and blue light have the shortest wavelengths and red light has the longest.",
-                "Input: " + input,
-                "Your response: "
+                    Model = Model.ChatGPTTurbo,
+                    Temperature = 0.6,
+                    MaxTokens = 512,
+                    Messages = real
                 });
-                var result = await API.Completions.CreateCompletionAsync(new CompletionRequest(propmt, model: Model.DavinciText, temperature: 0.5));
-                return result.Completions[0].Text;
+                var reply = result.Choices[0].Message;
+                history.Add(reply);
+                History.FirstOrDefault(x => x.Port == port).History.AddRange(history);
+                return reply.Content;
             }
             catch (Exception ex)
             {

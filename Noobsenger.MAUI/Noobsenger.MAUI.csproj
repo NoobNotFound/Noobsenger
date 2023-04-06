@@ -100,7 +100,20 @@
 
 	<ItemGroup>
 	  <None Remove="Resources\AppIcon\appicon.png" />
+	  <None Remove="Resources\Images\Boy.png" />
+	  <None Remove="Resources\Images\Gamer.png" />
+	  <None Remove="Resources\Images\Girl.png" />
 	  <None Remove="Resources\Images\icon.png" />
+	  <None Remove="Resources\Images\Man.png" />
+	  <None Remove="Resources\Images\man_three.png" />
+	  <None Remove="Resources\Images\man_two.png" />
+	  <None Remove="Resources\Images\masked_man.png" />
+	  <None Remove="Resources\Images\Nerd.png" />
+	  <None Remove="Resources\Images\open_ai.png" />
+	  <None Remove="Resources\Images\Sir.png" />
+	  <None Remove="Resources\Images\Woman.png" />
+	  <None Remove="Resources\Images\woman_three.png" />
+	  <None Remove="Resources\Images\woman_two.png" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -13,8 +13,8 @@ namespace Noobsenger.Core.Interfaces
         event EventHandler NameChanged;
         string UserName { get; set; }
         TcpClient clientSocket { get; set; }
-        AvatarManager.Avatars Avatar { get; set; }
-        void Connect(IPAddress ip, int port, string userName, AvatarManager.Avatars avatar);
+        Avatars Avatar { get; set; }
+        void Connect(IPAddress ip, int port, string userName, Avatars avatar);
         Task SendMessage(IData data);
     }
 }

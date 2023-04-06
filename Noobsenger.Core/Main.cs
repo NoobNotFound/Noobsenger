@@ -23,25 +23,24 @@ namespace Noobsenger.Core
         public static string ServerClosed  { get; set; } = "IC7";
         public static string ChannelClosed { get; set; } = "IC8";
         public static string ImgFromWeb { get; set; } = "IC9";
+        public static string AddGPTChannel { get; set; } = "IC10";
     }
-    public static class AvatarManager
+
+    public enum Avatars
     {
-        public enum Avatars
-        {
-            Boy,
-            Gamer,
-            Girl,
-            Man,
-            Man2,
-            Man3,
-            MaskedMan,
-            Nerd,
-            Sir,
-            Woman,
-            Woman1,
-            Woman2,
-            OpenAI
-        }
+        Boy,
+        Gamer,
+        Girl,
+        Man,
+        Man2,
+        Man3,
+        MaskedMan,
+        Nerd,
+        Sir,
+        Woman,
+        Woman1,
+        Woman2,
+        OpenAI
     }
     public static class Util
     {
@@ -134,7 +133,7 @@ namespace Noobsenger.Core
             clientSocket.Close();
             ServerSocket.Stop();
         }
-        public static void BroadcastAll(string msg, string uName, DataType type, AvatarManager.Avatars avatar = AvatarManager.Avatars.Gamer, Uri[] uploads = null, string MsgCode = null,int msgCount = 0)
+        public static void BroadcastAll(string msg, string uName, DataType type, Avatars avatar = Avatars.Gamer, Uri[] uploads = null, string MsgCode = null,int msgCount = 0)
         {
             foreach (DictionaryEntry Item in ClientsList)
             {
@@ -149,7 +148,7 @@ namespace Noobsenger.Core
                 broadcastStream.Flush();
             }
         }
-        public static void Broadcast(TcpClient broadcastSocket, string msg, string uName, DataType type, AvatarManager.Avatars avatar = AvatarManager.Avatars.Gamer, Uri[] uploads = null, string MsgCode = "")
+        public static void Broadcast(TcpClient broadcastSocket, string msg, string uName, DataType type, Avatars avatar = Avatars.Gamer, Uri[] uploads = null, string MsgCode = "")
         {
             NetworkStream broadcastStream = broadcastSocket.GetStream();
             byte[] broadcastBytes;
@@ -210,9 +209,9 @@ namespace Noobsenger.Core
         public TcpClient clientSocket { get; set; } = new TcpClient();
         private NetworkStream serverStream = default;
         public string UserName { get; set; }
-        public AvatarManager.Avatars Avatar { get; set; }
+        public Avatars Avatar { get; set; }
         public string ServerName { get; set; }
-        public async void Connect(IPAddress ip, int port, string userName, AvatarManager.Avatars avatar)
+        public async void Connect(IPAddress ip, int port, string userName, Avatars avatar)
         {
            await clientSocket.ConnectAsync(ip, port);
             serverStream = clientSocket.GetStream();

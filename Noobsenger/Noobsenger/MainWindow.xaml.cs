@@ -43,7 +43,12 @@ namespace Noobsenger
         {
             this.InitializeComponent();
             Title = "Noobsenger";
-
+            this.ToAppWindow().Closing += (s, e) =>
+            {
+                e.Cancel = true;
+                App.UltraServer.CloseServer();
+                App.Current.Exit();
+            };
             TitleBarHelper.SetExtendedTitleBar(this);
             AppTitleBar.Loaded += (_,_)=> SetDragRegionForCustomTitleBar(this.ToAppWindow());
             AppTitleBar.SizeChanged += (_,_)=> SetDragRegionForCustomTitleBar(this.ToAppWindow());

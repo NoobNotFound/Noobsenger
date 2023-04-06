@@ -28,7 +28,7 @@ namespace Noobsenger.Views
         }
         private void btnHost_Click(object sender, RoutedEventArgs e)
         {
-         //new NoobNotFound.WinUI.Common.UI.Controls.TenorFlyout() { APIKey = "AIzaSyARqNY-2kB-gvNvhoPEdTgNa7WTSUT28qc" }.ShowAt(btnHost);
+         //new NoobSharp.Common.WinUI.UI.Controls.TenorFlyout() { APIKey = "AIzaSyARqNY-2kB-gvNvhoPEdTgNa7WTSUT28qc" }.ShowAt(btnHost);
             MainWindow.NavigateFrame(typeof(HostPage));
         }
 

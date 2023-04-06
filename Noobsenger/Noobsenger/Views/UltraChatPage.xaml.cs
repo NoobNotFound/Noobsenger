@@ -38,6 +38,24 @@ namespace Noobsenger.Views
             App.UltraClient.ChannelAdded += UltraClient_ChannelAdded;
             App.UltraClient.ChannelRemoved += UltraClient_ChannelRemoved;
             App.UltraClient.ChatRecieved += UltraClient_ChatRecieved;
+            App.UltraClient.ServerClosed += UltraClient_ServerClosed;
+        }
+
+        private void UltraClient_ServerClosed(object? sender, EventArgs e)
+        {
+            this.DispatcherQueue.TryEnqueue(() =>
+            {
+                ChatFrame.IsEnabled = false;
+                ContentDialog dialog = new()
+                {
+                    XamlRoot = ((MainWindow)App.MainWindow).Content.XamlRoot,
+                    Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                    Title = "This Server was closed by the owner",
+                    PrimaryButtonText = "Ok",
+                    DefaultButton = ContentDialogButton.Primary
+                };
+                _ = dialog.ShowAsync();
+            });
         }
 
         private void UltraClient_ChatRecieved(object sender, IData e)
@@ -90,21 +108,23 @@ namespace Noobsenger.Views
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            if(!App.UltraServer.IsHosted)
+                btnMitAddChannel.Visibility = Visibility.Collapsed;
 
-            ContentDialog dialog = new ContentDialog();
-
-            // XamlRoot must be set in the case of a ContentDialog running in a Desktop app
-            dialog.XamlRoot = ((MainWindow)App.MainWindow).Content.XamlRoot;
-            dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
-            dialog.Title = "Login";
-            dialog.PrimaryButtonText = "Login";
-            dialog.SecondaryButtonText = "Cancel";
+            ContentDialog dialog = new()
+            {
+                XamlRoot = ((MainWindow)App.MainWindow).Content.XamlRoot,
+                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                Title = "Login",
+                PrimaryButtonText = "Login",
+                SecondaryButtonText = "Cancel"
+            };
             dialog.PrimaryButtonClick += Login;
             dialog.SecondaryButtonClick += delegate { Application.Current.Exit(); };
             dialog.DefaultButton = ContentDialogButton.Primary;
             dialog.Content = new Login();
 
-            var result = await dialog.ShowAsync();
+           await dialog.ShowAsync();
         }
 
         private void Login(ContentDialog sender, ContentDialogButtonClickEventArgs args)
@@ -131,7 +151,8 @@ namespace Noobsenger.Views
                 {
                     if (!string.IsNullOrEmpty(txtAddNewServer.Text))
                     {
-                        App.UltraServer.AddChannel(txtAddNewServer.Text);
+                        App.UltraServer.AddChannel(txtAddNewServer.Text, chkGPT.IsChecked.Value);
+                        chkGPT.IsChecked = false;
                     }
                     else
                     {

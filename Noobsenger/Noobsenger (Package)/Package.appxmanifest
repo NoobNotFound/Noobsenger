@@ -9,11 +9,11 @@
   <Identity
     Name="Noob.Messenger"
     Publisher="CN=NoobNotFound"
-    Version="0.5.3.0" />
+    Version="0.7.1.0" />
 
   <Properties>
-    <DisplayName>Noobsenger (Package)</DisplayName>
-    <PublisherDisplayName>user</PublisherDisplayName>
+    <DisplayName>Noobsenger</DisplayName>
+    <PublisherDisplayName>NoobNotFound</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
 

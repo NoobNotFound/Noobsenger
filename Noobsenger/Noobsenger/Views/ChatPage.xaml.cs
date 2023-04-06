@@ -23,8 +23,8 @@ using Noobsenger.Core.Ultra.DataManager;
 using Windows.UI.Notifications;
 using Windows.Storage;
 using System.Globalization;
-using NoobNotFound.WinUI.Common;
-using NoobNotFound.WinUI.Common.UI.Controls;
+using NoobSharp.Common.WinUI;
+using NoobSharp.Common.WinUI.UI.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -38,7 +38,7 @@ namespace Noobsenger.Views
     {
         public IClient Client { get; set; }
         public ObservableCollection<Message> Messages { get; set; } = new();
-        public ObservableCollection<NoobNotFound.WinUI.Common.Helpers.Tenor.JSON.SearchResult.Result> ImageUploads { get; set; } = new();
+        public ObservableCollection<NoobSharp.Common.WinUI.Helpers.Tenor.JSON.SearchResult.Result> ImageUploads { get; set; } = new();
         public bool IsUltra { get; set; }
         public ChatPage()
         {
@@ -95,7 +95,6 @@ namespace Noobsenger.Views
         {
             var f = await StorageFile.GetFileFromApplicationUriAsync(new Uri(@"ms-appx:///MessageToast.txt"));
             var xml = (await FileIO.ReadTextAsync(f)).Replace("{Sender}", sender).Replace("{Message}", message).Replace("{AvatarUri}", avatarUri);
-            
             /* var toastContent = new ToastContent()
             {
                 Visual = new ToastVisual()
@@ -324,14 +323,15 @@ namespace Noobsenger.Views
             }
         }
 
-        private void KeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        private async void KeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             btnSend_Click(null, null);
+            await Task.Delay(10);
             txtMessage.Text = "";
         }
 
         private TenorFlyout TenorFlyout = new() { APIKey = "AIzaSyARqNY-2kB-gvNvhoPEdTgNa7WTSUT28qc"}; //This is my key please do not steal I'm begging you!
-        private void TenorFlyout_ItemInvoked(object sender, NoobNotFound.WinUI.Common.Helpers.Tenor.JSON.SearchResult.Result e)
+        private void TenorFlyout_ItemInvoked(object sender, NoobSharp.Common.WinUI.Helpers.Tenor.JSON.SearchResult.Result e)
         {
             ImageUploads.Add(e);
         }
@@ -347,7 +347,7 @@ namespace Noobsenger.Views
 
         private void RemoveImage_Click(object sender, RoutedEventArgs e)
         {
-            ImageUploads.Remove((sender as Button).DataContext as NoobNotFound.WinUI.Common.Helpers.Tenor.JSON.SearchResult.Result);
+            ImageUploads.Remove((sender as Button).DataContext as NoobSharp.Common.WinUI.Helpers.Tenor.JSON.SearchResult.Result);
         }
     }
 }

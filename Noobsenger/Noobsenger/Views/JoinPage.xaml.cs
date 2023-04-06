@@ -40,7 +40,7 @@ namespace Noobsenger.Views
             }
             else
             {
-                txtInfo.Text = "Something went wrong with these info,\nPlease Check again man!";
+                txtInfo.Text = "Something went wrong with these info,\nPlease check again!";
                 txtInfo.Visibility = Visibility.Visible;
             }
         }

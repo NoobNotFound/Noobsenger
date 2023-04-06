@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Noobsenger.WinUI", "Noobsen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Noobsenger.Core", "Noobsenger.Core\Noobsenger.Core.csproj", "{46F379A1-C12E-4CCF-845B-A115D6C5AB91}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoobNotFound.WinUI.Common", "NoobNotFound.WinUI\NoobNotFound.WinUI.Common\NoobNotFound.WinUI.Common.csproj", "{F0387177-E5E1-4D68-ABD9-DE1B98DA91F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoobSharp.Common.WinUI", "NoobNotFound.WinUI\NoobNotFound.WinUI.Common\NoobSharp.Common.WinUI.csproj", "{F0387177-E5E1-4D68-ABD9-DE1B98DA91F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noobsenger.MAUI", "Noobsenger.MAUI\Noobsenger.MAUI.csproj", "{0500C193-FB6E-4C15-9BBA-BC264DD4CA0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Noobsenger.MAUI", "Noobsenger.MAUI\Noobsenger.MAUI.csproj", "{0500C193-FB6E-4C15-9BBA-BC264DD4CA0E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

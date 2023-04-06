@@ -50,7 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\NoobNotFound.WinUI\NoobNotFound.WinUI.Common\NoobNotFound.WinUI.Common.csproj" />
+    <ProjectReference Include="..\..\NoobNotFound.WinUI\NoobNotFound.WinUI.Common\NoobSharp.Common.WinUI.csproj" />
     <ProjectReference Include="..\..\Noobsenger.Core\Noobsenger.Core.csproj" />
   </ItemGroup>
 

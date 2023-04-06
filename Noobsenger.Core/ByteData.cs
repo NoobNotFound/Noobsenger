@@ -16,10 +16,10 @@ namespace Noobsenger.Core
         public string ClientName { get; set; }
         public string Message { get; set; }
         public string InfoCode { get; set; }
-        public AvatarManager.Avatars Avatar { get; set; }
+        public Avatars Avatar { get; set; }
         public Uri[] Uploads { get; set; }
         public DataType DataType { get; set; }
-        public ChatData(string clientName = "", string message = "", AvatarManager.Avatars avatar = AvatarManager.Avatars.Gamer, Uri[] uploads = null, DataType dataType = DataType.Chat, string infoCode = null, int count = 0)
+        public ChatData(string clientName = "", string message = "", Avatars avatar = Avatars.Gamer, Uri[] uploads = null, DataType dataType = DataType.Chat, string infoCode = null, int count = 0)
         {
             ClientName = clientName;
             Message = message;
@@ -73,7 +73,7 @@ namespace Noobsenger.Core
         {
             string str = Encoding.UTF8.GetString(arrBytes);
             ChatDataString r = JsonConvert.DeserializeObject<ChatDataString>(str);
-            ChatData data = new(r.ClientName,r.Message, (AvatarManager.Avatars)Enum.Parse(typeof(AvatarManager.Avatars),r.Avatar),dataType: (DataType)Enum.Parse(typeof(DataType),r.DataType),infoCode:r.InfoCode);
+            ChatData data = new(r.ClientName,r.Message, (Avatars)Enum.Parse(typeof(Avatars),r.Avatar),dataType: (DataType)Enum.Parse(typeof(DataType),r.DataType),infoCode:r.InfoCode);
             if(data.Uploads != null)
             {
 

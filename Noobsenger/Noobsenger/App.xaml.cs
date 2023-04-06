@@ -47,13 +47,16 @@ namespace Noobsenger
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            MainWindow = new MainWindow();
-            MainWindow.Activate();
-            var bg = new MicaBackground(MainWindow);
-            bg.TrySetMicaBackdrop();
-            if (args.UWPLaunchActivatedEventArgs.Kind == ActivationKind.Protocol)
+            if (args.UWPLaunchActivatedEventArgs.Kind != ActivationKind.ToastNotification)
             {
-                _ = new ContentDialog() { Content = new TextBlock { Text = args.UWPLaunchActivatedEventArgs.Arguments }, XamlRoot = MainWindow.Content.XamlRoot }.ShowAsync();
+                MainWindow = new MainWindow();
+                MainWindow.Activate();
+                var bg = new MicaBackground(MainWindow);
+                bg.TrySetMicaBackdrop();
+            }
+            else
+            {
+                Current.Exit();
             }
         }
 

@@ -22,9 +22,12 @@
                     </StackPanel>
                     <Button.Flyout>
                         <Flyout x:Name="addNewFly" Placement="Bottom">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBox x:Name="txtAddNewServer" PlaceholderText="Enter a name"/>
-                                <Button VerticalAlignment="Center" Margin="5,0,0,0" Content="Add" Click="btnAddChannel_Click"/>
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox x:Name="txtAddNewServer" PlaceholderText="Enter a name"/>
+                                    <Button VerticalAlignment="Center" Margin="5,0,0,0" Content="Add" Click="btnAddChannel_Click"/>
+                                </StackPanel>
+                                <CheckBox x:Name="chkGPT" Content="Quick GPT"/>
                             </StackPanel>
                         </Flyout>
                     </Button.Flyout>

@@ -8,22 +8,25 @@ using System.Threading;
 using System.Threading.Tasks;
 using Noobsenger.Core.Ultra.DataManager;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+
 namespace Noobsenger.Core.Ultra
 {
     public class UltraClient : Interfaces.IClient
     {
         public event EventHandler<IData> ChatRecieved = delegate { };
         public event EventHandler NameChanged = delegate { };
+        public event EventHandler ServerClosed = delegate { };
         public event EventHandler<int> ChannelAdded = delegate { };
         public event EventHandler<int> ChannelRemoved = delegate { };
         public TcpClient clientSocket { get; set; } = new TcpClient();
         private NetworkStream serverStream = default;
         public string UserName { get; set; }
         public List<ChannelClient> Channels = new();
-        public AvatarManager.Avatars Avatar { get; set; }
+        public Avatars Avatar { get; set; }
         public string ServerName { get; set; }
         public IPAddress IP { get; private set; }
-        public async void Connect(IPAddress ip, int port, string userName, AvatarManager.Avatars avatar)
+        public async void Connect(IPAddress ip, int port, string userName, Avatars avatar)
         {
             IP = ip;
             await clientSocket.ConnectAsync(ip, port);
@@ -71,7 +74,7 @@ namespace Noobsenger.Core.Ultra
                         {
                             ChatRecieved.Invoke(returndata.ClientName, returndata);
                         }
-                        if (returndata.InfoCode == InfoCodes.ServerNameReceived)
+                        else if (returndata.InfoCode == InfoCodes.ServerNameReceived)
                         {
                             this.ServerName = returndata.Message;
                             NameChanged.Invoke(this, new EventArgs());
@@ -83,6 +86,13 @@ namespace Noobsenger.Core.Ultra
                         else if (returndata.InfoCode == InfoCodes.AddChannel)
                         {
                             var c = new ChannelClient();
+                            c.Connect(IP, int.Parse(returndata.Message), UserName, Avatar);
+                            Channels.Add(c);
+                            ChannelAdded(this, c.Port);
+                        }
+                        else if (returndata.InfoCode == InfoCodes.AddGPTChannel)
+                        {
+                            var c = new ChannelClient() { QuickGPT = true };
                             c.Connect(IP, int.Parse(returndata.Message), UserName, Avatar);
                             Channels.Add(c);
                             ChannelAdded(this, c.Port);
@@ -110,10 +120,10 @@ namespace Noobsenger.Core.Ultra
                             var chnls = returndata.Message.Split(':'); 
                             foreach (var item in chnls)
                             {
-                                if (int.TryParse(item,out _))
+                                if (int.TryParse(item,out var x))
                                 {
                                     var c = new ChannelClient();
-                                    c.Connect(IP, int.Parse(item), UserName, Avatar);
+                                    c.Connect(IP, x, UserName, Avatar);
                                     Channels.Add(c);
                                     ChannelAdded(this, c.Port);
                                 }
@@ -121,10 +131,13 @@ namespace Noobsenger.Core.Ultra
                         }
                         else if (returndata.InfoCode == InfoCodes.ServerClosed)
                         {
+                            ServerClosed.Invoke(this, new());
                             try
                             {
                                 foreach (var Item in Channels)
                                 {
+                                    ChannelRemoved(this, Item.Port);
+                                    Item.clientSocket.Close();
                                     Item.clientSocket.Dispose();
                                     Channels.Remove(Item);
 
@@ -164,11 +177,12 @@ namespace Noobsenger.Core.Ultra
         public TcpClient clientSocket { get; set; } = new TcpClient();
         private NetworkStream serverStream = default;
         public string UserName { get; set; }
-        public AvatarManager.Avatars Avatar { get; set; }
+        public bool QuickGPT { get; set; }
+        public Avatars Avatar { get; set; }
         public string ChannelName { get; set; }
         public int Port;
         public IPAddress IP;
-        public async void Connect(IPAddress ip, int port, string userName, AvatarManager.Avatars avatar)
+        public async void Connect(IPAddress ip, int port, string userName, Avatars avatar)
         {
             IP = ip;
             Port = port;

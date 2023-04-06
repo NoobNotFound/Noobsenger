@@ -10,11 +10,11 @@ namespace Noobsenger.Core.Ultra.DataManager
         public string ClientName { get; set; }
         public string Message { get; set; }
         public string InfoCode { get; set; }
-        public AvatarManager.Avatars Avatar { get; set; }
+        public Avatars Avatar { get; set; }
         public Uri[] Uploads { get; set; }
         public DataType DataType { get; set; }
         public object[] Objects { get; set; }
-        public Data(string clientName = "", string message = "", AvatarManager.Avatars avatar = AvatarManager.Avatars.Gamer, Uri[] uploads = null, DataType dataType = DataType.Chat, string infoCode = null,object[] objects = null, int count = 0)
+        public Data(string clientName = "", string message = "", Avatars avatar = Avatars.Gamer, Uri[] uploads = null, DataType dataType = DataType.Chat, string infoCode = null,object[] objects = null, int count = 0)
         {
             ClientName = clientName;
             Message = message;

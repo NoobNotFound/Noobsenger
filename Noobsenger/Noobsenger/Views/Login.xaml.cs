@@ -28,7 +28,7 @@ namespace Noobsenger.Views
     public sealed partial class Login : Page
     {
         public static string UserName;
-        public static AvatarManager.Avatars Avatar;
+        public static Avatars Avatar;
         public Login()
         {
             this.InitializeComponent();
@@ -53,7 +53,7 @@ namespace Noobsenger.Views
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            var avatars = Util.GetEnumList<AvatarManager.Avatars>();
+            var avatars = Util.GetEnumList<Avatars>();
 
 
             List<AvatarWithBitmap> avatarsList = new List<AvatarWithBitmap>();
@@ -68,10 +68,10 @@ namespace Noobsenger.Views
     }
     public class AvatarWithBitmap
     {
-        public AvatarManager.Avatars Avatar { get; set; }
+        public Avatars Avatar { get; set; }
         public BitmapImage Image { get; set; }
 
-        public AvatarWithBitmap(AvatarManager.Avatars avatar, BitmapImage image)
+        public AvatarWithBitmap(Avatars avatar, BitmapImage image)
         {
             Avatar = avatar;
             Image = image;

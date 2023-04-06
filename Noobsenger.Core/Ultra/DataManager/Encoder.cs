@@ -34,7 +34,7 @@ namespace Noobsenger.Core.Ultra.DataManager
         {
             string str = Encoding.UTF8.GetString(arrBytes);
             DataString r = JsonConvert.DeserializeObject<DataString>(str);
-            Data data = new(r.ClientName, r.Message, (AvatarManager.Avatars)Enum.Parse(typeof(AvatarManager.Avatars), r.Avatar), dataType: (DataType)Enum.Parse(typeof(DataType), r.DataType), infoCode: r.InfoCode);
+            Data data = new(r.ClientName, r.Message, (Avatars)Enum.Parse(typeof(Avatars), r.Avatar), dataType: (DataType)Enum.Parse(typeof(DataType), r.DataType), infoCode: r.InfoCode);
             if (data.Uploads != null)
             {
 
