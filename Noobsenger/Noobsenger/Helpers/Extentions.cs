@@ -14,5 +14,7 @@ namespace Noobsenger.Helpers
     {
         public static AppWindow ToAppWindow(this Window window) =>
             AppWindow.GetFromWindowId(Win32Interop.GetWindowIdFromWindow(WindowNative.GetWindowHandle(window)));
+        public static bool IsNullEmptyOrWhiteSpace(this string str) =>
+            string.IsNullOrEmpty(str) || string.IsNullOrWhiteSpace(str);
     }
 }

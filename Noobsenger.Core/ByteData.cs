@@ -19,6 +19,9 @@ namespace Noobsenger.Core
         public Avatars Avatar { get; set; }
         public Uri[] Uploads { get; set; }
         public DataType DataType { get; set; }
+        public string GUID { get; set; }
+        public byte[] Files { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
         public ChatData(string clientName = "", string message = "", Avatars avatar = Avatars.Gamer, Uri[] uploads = null, DataType dataType = DataType.Chat, string infoCode = null, int count = 0)
         {
             ClientName = clientName;

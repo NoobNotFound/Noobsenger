@@ -15,7 +15,10 @@ namespace Noobsenger.Core.Ultra.DataManager
                 Message = data.Message.ToString(),
                 ClientName = data.ClientName,
                 DataType = data.DataType.ToString(),
-                InfoCode = data.InfoCode
+                InfoCode = data.InfoCode,
+                GUID = data.GUID,
+                Count = data.Count.ToString(),
+                Files = data.Files != null ? string.Join(',', data.Files.Select(x=> x.ToString()).ToArray()) : ""
             };
             if (data.Uploads != null)
             {
@@ -28,16 +31,29 @@ namespace Noobsenger.Core.Ultra.DataManager
             }
             return Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(byteData));
         }
+        
 
-        // Convert a byte array to an Object
         public static Data ToData(this byte[] arrBytes)
         {
             string str = Encoding.UTF8.GetString(arrBytes);
             DataString r = JsonConvert.DeserializeObject<DataString>(str);
-            Data data = new(r.ClientName, r.Message, (Avatars)Enum.Parse(typeof(Avatars), r.Avatar), dataType: (DataType)Enum.Parse(typeof(DataType), r.DataType), infoCode: r.InfoCode);
+            byte[] files = null;
+            try
+            {
+                files = r.Files.Split(',').Select(x => byte.Parse(x)).ToArray();
+            }
+            catch { }
+            Data data = new(r.ClientName,
+                r.Message,
+                (Avatars)Enum.Parse(typeof(Avatars),
+                r.Avatar),
+                dataType: (DataType)Enum.Parse(typeof(DataType), r.DataType),
+                infoCode: r.InfoCode,
+                gUID: r.GUID,
+                count: (int.TryParse(r.Count, out int i) ? i : 0),
+                Files: files);
             if (data.Uploads != null)
             {
-
                 List<Uri> uploads = new();
                 foreach (var item in r.Uploads)
                 {

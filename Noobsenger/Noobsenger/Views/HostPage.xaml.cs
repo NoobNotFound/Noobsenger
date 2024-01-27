@@ -13,6 +13,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Noobsenger.Core;
+using Noobsenger.Helpers;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -33,7 +34,7 @@ namespace Noobsenger.Views
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (cmbxIps.SelectedItem != null && !string.IsNullOrEmpty(txtName.Text.Replace(" ", "")) && nbrPort.Value > 1023 && nbrPort.Value < 49152)
+            if (cmbxIps.SelectedItem != null && !txtName.Text.IsNullEmptyOrWhiteSpace() && nbrPort.Value > 1023 && nbrPort.Value < 49152)
             {
                 Server.IP = (System.Net.IPAddress)cmbxIps.SelectedItem;
                 Server.Port = Convert.ToInt32(nbrPort.Value);

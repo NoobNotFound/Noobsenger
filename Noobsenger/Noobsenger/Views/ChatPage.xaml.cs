@@ -26,16 +26,39 @@ using System.Globalization;
 using NoobSharp.Common.WinUI;
 using NoobSharp.Common.WinUI.UI.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using Noobsenger.Core.Ultra;
+using System.ComponentModel;
+using NoobSharp.Common.WinUI.Helpers;
+
 
 namespace Noobsenger.Views
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class ChatPage : Page
+    public sealed partial class ChatPage : Page, INotifyPropertyChanged
     {
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        internal void Set<T>(ref T obj, T value, string name = null)
+        {
+            obj = value;
+            InvokePropertyChanged(name);
+        }
+        public void InvokePropertyChanged(string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        private bool _ShowThink;
+        public bool ShowThink
+        {
+            get => _ShowThink;
+            set => Set(ref _ShowThink, value);
+        }
+        private string _ThinkText;
+        public string ThinkText
+        {
+            get => _ThinkText;
+            set => Set(ref _ThinkText, value);
+        }
         public IClient Client { get; set; }
         public ObservableCollection<Message> Messages { get; set; } = new();
         public ObservableCollection<NoobSharp.Common.WinUI.Helpers.Tenor.JSON.SearchResult.Result> ImageUploads { get; set; } = new();
@@ -51,10 +74,21 @@ namespace Noobsenger.Views
             this.Client = channelClient;
             TenorFlyout.ItemInvoked += TenorFlyout_ItemInvoked;
             Client.NameChanged += Client_ServerNameChanged;
+            Client_ServerNameChanged(null, null);
             Client.ChatRecieved += Client_ChatRecieved;
+            (Client as ChannelClient).ThinkingGuys.CollectionChanged += ThinkingGuys_Changed;
             this.InitializeComponent();
         }
 
+        private void ThinkingGuys_Changed(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                ThinkText = string.Join(", ", (Client as ChannelClient).ThinkingGuys.Select(x => x.Nme)) + ((Client as ChannelClient).ThinkingGuys.Count == 1 ? " is thinking..." : " are thinking...");
+                ShowThink = (Client as ChannelClient).ThinkingGuys.Any();
+
+            });
+        }
 
         int msgCount = 0;
         private void Client_ChatRecieved(object sender, IData e)
@@ -63,13 +97,13 @@ namespace Noobsenger.Views
             {
                 if (e.DataType == DataType.Chat)
                 {
-                    if (e.ClientName == Client.UserName)
+                    if (e.GUID == Client.GUID.ToString())
                     {
-                        Messages.Add(MessageItem.Create(new MessageItem { Avatar = await AvatarUtil.AvatarToBitmap(e.Avatar), From = e.ClientName, Message = e.Message, Time = DateTime.Now, Sender = MessageSender.Me, Count = msgCount }, Messages));
+                        Messages.Add(new MessageItem { GUID = Guid.Parse(e.GUID), Avatar = await AvatarUtil.AvatarToBitmap(e.Avatar), From = e.ClientName, Message = e.Message, Time = DateTime.Now, Sender = MessageSender.Me, Count = e.Count });
                     }
                     else
                     {
-                        Messages.Add(MessageItem.Create(new MessageItem { Avatar = await AvatarUtil.AvatarToBitmap(e.Avatar), From = e.ClientName, Message = e.Message, Time = DateTime.Now, Sender = MessageSender.Other, Count = msgCount }, Messages));
+                        Messages.Add(MessageItem.Create(new MessageItem { GUID = Guid.Parse(e.GUID), Avatar = await AvatarUtil.AvatarToBitmap(e.Avatar), From = e.ClientName, Message = e.Message, Time = DateTime.Now, Sender = MessageSender.Other, Count = e.Count }, Messages));
                         Notify(e.ClientName, e.Message, AvatarUtil.AvatarToPathString(e.Avatar));
                     }
                 }
@@ -78,8 +112,15 @@ namespace Noobsenger.Views
                     if (e.InfoCode == InfoCodes.Join)
                     {
                         Messages.Add(new InfoItem { Info = e.Message, Time = DateTime.Now, Count = msgCount });
-                    }
-                    if (e.InfoCode == InfoCodes.ImgFromWeb)
+                    } 
+                    else if(e.InfoCode == InfoCodes.MessageDelete)
+                    {
+                        try
+                        {
+                            Messages.Remove(Messages.First(x => (x is MessageItem m && m.Message == e.Message) && x.GUID.ToString() == e.GUID && x.Count == e.Count));
+                        }
+                        catch { }
+                    }else if (e.InfoCode == InfoCodes.ImgFromWeb)
                     {
                         Messages.Add(MessageItem.Create(new MessageItem { Avatar = await AvatarUtil.AvatarToBitmap(e.Avatar), From = e.ClientName, Message = e.Message, Time = DateTime.Now, Sender = MessageSender.Other, Count = msgCount }, Messages));
                     }
@@ -93,43 +134,51 @@ namespace Noobsenger.Views
         }
         private async void Notify(string sender,string message,string avatarUri)
         {
-            var f = await StorageFile.GetFileFromApplicationUriAsync(new Uri(@"ms-appx:///MessageToast.txt"));
-            var xml = (await FileIO.ReadTextAsync(f)).Replace("{Sender}", sender).Replace("{Message}", message).Replace("{AvatarUri}", avatarUri);
-            /* var toastContent = new ToastContent()
+            try
             {
-                Visual = new ToastVisual()
+                var f = await StorageFile.GetFileFromApplicationUriAsync(new Uri(@"ms-appx:///MessageToast.txt"));
+                var xml = (await FileIO.ReadTextAsync(f)).Replace("{Sender}", sender).Replace("{Message}", message).Replace("{AvatarUri}", avatarUri);
+                /* var toastContent = new ToastContent()
                 {
-                    BindingGeneric = new ToastBindingGeneric()
+                    Visual = new ToastVisual()
                     {
-                        Children =
-            {
-                new AdaptiveText()
-                {
-                    Text = sender
-                },
-                new AdaptiveText()
-                {
-                    Text = message
-                }
-            },
-                        AppLogoOverride = new ToastGenericAppLogo()
+                        BindingGeneric = new ToastBindingGeneric()
                         {
-                            Source = avatarUri,
-                            HintCrop = ToastGenericAppLogoCrop.Circle
-                        }
+                            Children =
+                {
+                    new AdaptiveText()
+                    {
+                        Text = sender
+                    },
+                    new AdaptiveText()
+                    {
+                        Text = message
                     }
                 },
-                Actions = new ToastActionsCustom()
-            };
-            */
+                            AppLogoOverride = new ToastGenericAppLogo()
+                            {
+                                Source = avatarUri,
+                                HintCrop = ToastGenericAppLogoCrop.Circle
+                            }
+                        }
+                    },
+                    Actions = new ToastActionsCustom()
+                };
+                */
 
-            // Create the toast notification
-            var doc = new Windows.Data.Xml.Dom.XmlDocument();
-            doc.LoadXml(xml);
-            var toastNotif = new ToastNotification(doc);
-
-            // And send the notification
-            ToastNotificationManager.CreateToastNotifier().Show(toastNotif);
+                // Create the toast notification
+                var doc = new Windows.Data.Xml.Dom.XmlDocument();
+                doc.LoadXml(xml);
+                var toastNotif = new ToastNotification(doc)
+                {
+                    ExpirationTime = DateTime.Now.AddSeconds(7),
+                    ExpiresOnReboot = true,
+                    Group = txtServerName.Text
+                };
+                // And send the notification
+                ToastNotificationManager.CreateToastNotifier().Show(toastNotif);
+            }
+            catch { }
         }
         private void Client_ServerNameChanged(object sender, EventArgs args)
         {
@@ -145,7 +194,6 @@ namespace Noobsenger.Views
                 }
             }
         }
-
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             if (!IsUltra)
@@ -195,9 +243,10 @@ namespace Noobsenger.Views
             Client.ChatRecieved += Client_ChatRecieved;
             ChatView.ItemsSource = Messages;
             txtMessage.Focus(FocusState.Programmatic);
-            Client.Connect(Server.IP, Server.Port, Views.Login.UserName, Views.Login.Avatar);
+            Client.Connect(Server.IP, Server.Port, Views.Login.UserName, Views.Login.Avatar,Guid.Empty);
         }
 
+        int MEmsgCount = 0;
         private async void btnSend_Click(object sender, RoutedEventArgs e)
         {
             var gifs = ImageUploads.Any() ? "\n\n"  + string.Join('\n', ImageUploads.Select(x => $"![GIF]({x.media_formats.tinygif.url})")) : "";
@@ -207,10 +256,11 @@ namespace Noobsenger.Views
                 if (!string.IsNullOrWhiteSpace(txtMessage.Text))
                 {
                     this.IsEnabled = false;
-                    await Client.SendMessage(new ChatData(Client.UserName, txtMessage.Text + gifs, Client.Avatar, dataType: DataType.Chat));
+                    await Client.SendMessage(new Data(Client.UserName, txtMessage.Text + gifs, Client.Avatar, count: MEmsgCount, dataType: DataType.Chat));
                     txtMessage.Text = "";
                     this.IsEnabled = true;
                     txtMessage.Focus(FocusState.Programmatic);
+                    MEmsgCount++;
                 }
             }
             else
@@ -218,10 +268,11 @@ namespace Noobsenger.Views
                 if (!string.IsNullOrWhiteSpace(txtMessage.Text))
                 {
                     this.IsEnabled = false;
-                    await Client.SendMessage(new Data(Client.UserName, txtMessage.Text + gifs, Client.Avatar, dataType: DataType.Chat));
+                    await Client.SendMessage(new Data(Client.UserName, txtMessage.Text + gifs, Client.Avatar, count: MEmsgCount, dataType: DataType.Chat));
                     txtMessage.Text = "";
                     this.IsEnabled = true;
                     txtMessage.Focus(FocusState.Programmatic);
+                    MEmsgCount++;
                 }
             }
             txtMessage.Text = "";
@@ -234,9 +285,8 @@ namespace Noobsenger.Views
                 string txt = txtServerName.Text;
                 await Task.Delay(new TimeSpan(0, 0, 2));
                 if (txt != txtServerName.Text)
-                {
                     return;
-                }
+                
                 try
                 {
                     if (!string.IsNullOrWhiteSpace(txtServerName.Text))
@@ -287,21 +337,22 @@ namespace Noobsenger.Views
         private void btnCopyPort_Click(object sender, RoutedEventArgs e)
         {
             var dataPackage = new DataPackage();
-            dataPackage.SetText(Server.Port.ToString());
+            dataPackage.SetText(txtPort.Text);
             Clipboard.SetContent(dataPackage);
         }
 
-        private void mitDelmsg_Click(object sender, RoutedEventArgs e)
+        private async void mitDelmsg_Click(object sender, RoutedEventArgs e)
         {
             if(sender is MenuFlyoutItem mit)
             {
-                foreach (var item in Messages)
+                var d = mit.DataContext as Message;
+                if (mit.Text == "Delete for me")
                 {
-                    if(item.Count == int.Parse(mit.Tag.ToString()))
-                    {
-                        Messages.Remove(item);
-                        return;
-                    }
+                    Messages.Remove(d);
+                }
+                else
+                {
+                    await Client.SendMessage(new Data(Client.UserName, (d as MessageItem).Message, Client.Avatar, count: d.Count, dataType: DataType.InfoMessage,infoCode:InfoCodes.MessageDelete));
                 }
             }
         }
@@ -328,9 +379,11 @@ namespace Noobsenger.Views
             btnSend_Click(null, null);
             await Task.Delay(10);
             txtMessage.Text = "";
+            txtMessage_TextChanged(null, null);
         }
 
         private TenorFlyout TenorFlyout = new() { APIKey = "AIzaSyARqNY-2kB-gvNvhoPEdTgNa7WTSUT28qc"}; //This is my key please do not steal I'm begging you!
+
         private void TenorFlyout_ItemInvoked(object sender, NoobSharp.Common.WinUI.Helpers.Tenor.JSON.SearchResult.Result e)
         {
             ImageUploads.Add(e);
@@ -348,6 +401,19 @@ namespace Noobsenger.Views
         private void RemoveImage_Click(object sender, RoutedEventArgs e)
         {
             ImageUploads.Remove((sender as Button).DataContext as NoobSharp.Common.WinUI.Helpers.Tenor.JSON.SearchResult.Result);
+        }
+
+        private void txtMessage_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!txtMessage.Text.IsNullEmptyOrWhiteSpace())
+                _ = (Client as ChannelClient).Thinking(true);
+            else
+                _ = (Client as ChannelClient).Thinking(false);
+        }
+
+        private void btnAttach_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

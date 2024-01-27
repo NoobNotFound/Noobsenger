@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Noobsenger.MAUI.Pages.HostPage"
+             
+             Title="HostPage">
+    <StackLayout
+        VerticalOptions="FillAndExpand"
+			Padding="18"
+        Spacing="6"
+			HorizontalOptions="Center">
+        <Label
+				FontSize="32"
+				Text="Host a server" />
+        <Label
+            FontSize="Default"
+				Margin="0,6"
+				Text="Choose the IP, Port (auto-generated), and a name for your server. PC is recommended for hosting a server but it is possible to host on android too." />
+        <StackLayout
+				Orientation="Horizontal">
+            <Label
+            FontSize="Default"
+					Text="IP "
+					WidthRequest="100"
+					VerticalOptions="Center" />
+            <Picker
+					WidthRequest="200"
+					x:Name="cmbxIps" />
+        </StackLayout>
+        <StackLayout
+				Orientation="Horizontal">
+            <Label
+            FontSize="Default"
+					Text="Port "
+					VerticalOptions="Center"
+					WidthRequest="100" />
+            <Entry
+                    Keyboard="Numeric"
+                    WidthRequest="100"
+                    x:Name="nbrPort" />
+        </StackLayout>
+        <StackLayout
+				Orientation="Horizontal">
+            <Label
+            FontSize="Default"
+					Text="Server Name"
+					VerticalOptions="Center"
+					WidthRequest="100" />
+            <Entry
+                    x:Name="txtName"
+                    WidthRequest="250"
+					Placeholder="Noob Server  " />
+        </StackLayout>
+        <Label Margin="0,6,0,0" FontSize="Caption" x:Name="txtInfo" TextColor="Red" IsVisible="False" />
+        <StackLayout VerticalOptions="EndAndExpand" HorizontalOptions="Center" Orientation="Vertical" Spacing="6">
+            <Label FontAttributes="Bold" x:Name="txtError" TextColor="Red" IsVisible="False" />
+            <StackLayout Spacing="8" Orientation="Horizontal" >
+                <Button
+                Text="Back"
+                    WidthRequest="100"
+                    Clicked="Button_Clicked_1"
+				HorizontalOptions="Center" />
+                <Button
+                    WidthRequest="100"
+                Text="Host"
+                Style="{StaticResource AccentButtonStyle}"
+                Clicked="Button_Clicked"
+				HorizontalOptions="Center" />
+            </StackLayout>
+        </StackLayout>
+    </StackLayout>
+</ContentPage>

@@ -92,7 +92,8 @@
                                 <Grid.ContextFlyout>
                                     <MenuFlyout>
                                         <MenuFlyoutItem Tag="{x:Bind Count}" Click="mitCopyMsg_Click" Text="Copy message"/>
-                                        <MenuFlyoutItem  Tag="{x:Bind Count}" Click="mitDelmsg_Click" Text="Delete message"/>
+                                        <MenuFlyoutItem  Click="mitDelmsg_Click" Text="Delete for me"/>
+                                        <MenuFlyoutItem x:Name="mitDelForMe" x:Load="{x:Bind IsSentByMe}" Click="mitDelmsg_Click" Text="Delete for everyone"/>
                                     </MenuFlyout>
                                 </Grid.ContextFlyout>
                                 <Grid.RowDefinitions>
@@ -123,11 +124,17 @@
         </ListView>
 
         <Grid Grid.Row="2">
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <AddDeleteThemeTransition/>
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <GridView Padding="0" Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="7" ItemsSource="{x:Bind ImageUploads}" SelectionMode="None">
+            <GridView Padding="0" Margin="6" Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="6" ItemsSource="{x:Bind ImageUploads}" SelectionMode="None">
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="results:Result">
                         <Grid CornerRadius="7" Margin="5,10">
@@ -146,13 +153,16 @@
                     </DataTemplate>
                 </GridView.ItemTemplate>
             </GridView>
-            <Grid Margin="5" MinHeight="75" Grid.Row="1">
+            <Grid Grid.Row="1" Margin="6" x:Load="{x:Bind ShowThink,Mode=OneWay}" x:Name="thinkingGrid" Padding="6" Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="6" >
+                <TextBlock Text="{x:Bind ThinkText,Mode=OneWay}"/>
+            </Grid>
+            <Grid Margin="6" MinHeight="75" Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBox MaxHeight="400" AcceptsReturn="True" x:Name="txtMessage" Grid.Column="0" IsSpellCheckEnabled="True" HorizontalAlignment="Stretch">
+                <TextBox TextChanged="txtMessage_TextChanged" MaxHeight="400" AcceptsReturn="True" x:Name="txtMessage" Grid.Column="0" IsSpellCheckEnabled="True" HorizontalAlignment="Stretch">
                     <TextBox.KeyboardAccelerators>
                         <KeyboardAccelerator Modifiers="None" Key="Enter" Invoked="KeyboardAccelerator_Invoked"/>
                     </TextBox.KeyboardAccelerators>
@@ -164,6 +174,9 @@
                     </Grid.RowDefinitions>
                     <Button VerticalAlignment="Stretch" Margin="5,0,0,0" x:Name="btnGif" Click="btnGif_Click" Grid.Column="2">
                         <FontIcon Glyph="&#xF4A9;"/>
+                    </Button>
+                    <Button VerticalAlignment="Stretch" Margin="5,0,0,0"  x:Name="btnAttach" Click="btnAttach_Click" Grid.Column="2">
+                        <FontIcon Glyph="&#xE723;"/>
                     </Button>
                 </Grid>
                 <Button VerticalAlignment="Stretch" Margin="5,0,0,0" x:Name="btnSend" Click="btnSend_Click" Grid.Column="2">

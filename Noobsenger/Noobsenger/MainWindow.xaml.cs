@@ -22,14 +22,10 @@ using Noobsenger.Core;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Windowing;
 using WinRT.Interop;
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using System.Diagnostics;
 
 namespace Noobsenger
 {
-    /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class MainWindow : Window
     {
         public static Frame RootMainFrame;
@@ -43,18 +39,24 @@ namespace Noobsenger
         {
             this.InitializeComponent();
             Title = "Noobsenger";
-            this.ToAppWindow().Closing += (s, e) =>
-            {
-                e.Cancel = true;
-                App.UltraServer.CloseServer();
-                App.Current.Exit();
-            };
+            this.ToAppWindow().Closing += Onclose;
             TitleBarHelper.SetExtendedTitleBar(this);
             AppTitleBar.Loaded += (_,_)=> SetDragRegionForCustomTitleBar(this.ToAppWindow());
             AppTitleBar.SizeChanged += (_,_)=> SetDragRegionForCustomTitleBar(this.ToAppWindow());
             RootMainFrame = MainFrame;
             RootMainFrame.Navigated += RootMainFrame_Navigated;
             RootMainFrame.Navigate(typeof(Views.WelcomePage));
+        }
+
+        private void Onclose(AppWindow sender, AppWindowClosingEventArgs args)
+        {
+            args.Cancel = true;
+            App.UltraServer.TryCloseServer();
+            App.UltraClient.Disconnect();
+            this.ToAppWindow().Closing -= Onclose;
+            this.Close();
+            Task.Delay(100).Wait();
+            Process.GetCurrentProcess().Kill();
         }
 
         private void RootMainFrame_Navigated(object sender, NavigationEventArgs e)

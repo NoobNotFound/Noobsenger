@@ -9,6 +9,8 @@ namespace Noobsenger.MAUI.Helpers;
 
 public static class Extentions
 {
+    public static bool IsNullEmptyOrWhiteSpace(this string str) =>
+        string.IsNullOrEmpty(str) || string.IsNullOrWhiteSpace(str);
     public static string ToImageName(this Avatars avatar) => avatar switch
     {
         Avatars.Boy => "boy",

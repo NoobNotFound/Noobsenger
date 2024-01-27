@@ -1,15 +1,16 @@
+using System.Net;
+using System.Xml.Linq;
 using Noobsenger.Core;
 using Noobsenger.Core.Ultra;
+using Noobsenger.MAUI.Helpers;
 
-namespace Noobsenger.MAUI.Views;
+namespace Noobsenger.MAUI.Pages;
 
-public partial class HostPage : ContentPage
+public partial class JoinPage : ContentPage
 {
-    public HostPage()
+	public JoinPage()
     {
         InitializeComponent();
-        cmbxIps.ItemsSource = Util.GetIPAddresses();
-        cmbxIps.SelectedIndex = 0;
         nbrPort.Text = "" + new Random().Next(1024, 49151);
     }
 
@@ -20,17 +21,27 @@ public partial class HostPage : ContentPage
     }
     private void Button_Clicked(object sender, EventArgs e)
     {
-        if (txtName.Text == null || nbrPort.Text == null)
+        if (nbrPort.Text == null)
         {
             txtInfo.Text = "Something went wrong with these info,\nPlease Check again!";
             txtInfo.IsVisible = true;
             return;
         }
 
-        if (cmbxIps.SelectedItem != null && !string.IsNullOrEmpty(txtName.Text.Replace(" ", "")) && int.Parse(nbrPort.Text) > 1023 && int.Parse(nbrPort.Text) < 49152)
+        if (IPAddress.TryParse(txtIP.Text, out var ip) && int.Parse(nbrPort.Text) > 1023 && int.Parse(nbrPort.Text) < 49152)
         {
-            App.UltraServer.Host((System.Net.IPAddress)cmbxIps.SelectedItem, Convert.ToInt32(nbrPort.Text), txtName.Text);
-            Application.Current.MainPage = new LoginPage();
+            Server.IP = ip;
+            Server.Port = Convert.ToInt32(nbrPort.Text);
+            
+            try
+            {
+                Application.Current.MainPage = new LoginPage();
+            }
+            catch (Exception ex)
+            {
+                txtError.Text = ex.Message;
+                txtError.IsVisible = true;
+            }
         }
         else
         {
@@ -43,5 +54,4 @@ public partial class HostPage : ContentPage
     {
         Application.Current.MainPage = new MainPage();
     }
-
 }

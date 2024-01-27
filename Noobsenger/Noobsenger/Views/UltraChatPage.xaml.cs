@@ -45,16 +45,19 @@ namespace Noobsenger.Views
         {
             this.DispatcherQueue.TryEnqueue(() =>
             {
-                ChatFrame.IsEnabled = false;
-                ContentDialog dialog = new()
+                try
                 {
-                    XamlRoot = ((MainWindow)App.MainWindow).Content.XamlRoot,
-                    Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
-                    Title = "This Server was closed by the owner",
-                    PrimaryButtonText = "Ok",
-                    DefaultButton = ContentDialogButton.Primary
-                };
-                _ = dialog.ShowAsync();
+                    ChatFrame.IsEnabled = false;
+                    _=new ContentDialog()
+                    {
+                        XamlRoot = ((MainWindow)App.MainWindow).Content.XamlRoot,
+                        Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                        Title = "This Server was closed by the owner",
+                        PrimaryButtonText = "Ok",
+                        DefaultButton = ContentDialogButton.Primary
+                    }.ShowAsync();
+                }
+                catch { }
             });
         }
 
@@ -84,9 +87,11 @@ namespace Noobsenger.Views
             this.DispatcherQueue.TryEnqueue(() =>
             {
             ChatPage pg = new();
-            var itm = new NavigationViewItem();
-            itm.Icon = new FontIcon { Glyph = "\xe8f2" };
-            foreach (var item in App.UltraClient.Channels)
+                var itm = new NavigationViewItem
+                {
+                    Icon = new FontIcon { Glyph = "\xe8f2" }
+                };
+                foreach (var item in App.UltraClient.Channels)
             {
                 if (item.Port == e)
                 {
@@ -94,6 +99,7 @@ namespace Noobsenger.Views
                     itm.Content = item.ChannelName;
                     itm.Tag = item.Port;
                     item.NameChanged += (sender, e) => { this.DispatcherQueue.TryEnqueue(() => itm.Content = item.ChannelName); };
+                     this.DispatcherQueue.TryEnqueue(() => itm.Content = item.ChannelName);
                     }
                 }
                 ChannelPages.Add(pg);
@@ -131,7 +137,7 @@ namespace Noobsenger.Views
         {
             try
             {
-                App.UltraClient.Connect(Server.IP, Server.Port, Views.Login.UserName, Views.Login.Avatar);
+                App.UltraClient.Connect(Server.IP, Server.Port, Views.Login.UserName, Views.Login.Avatar,Guid.NewGuid());
             }
             catch(Exception ex)
             {

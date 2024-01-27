@@ -8,6 +8,8 @@ using System.Text;
 using System.Linq;
 using System.Threading;
 using System.Globalization;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using Noobsenger.Core.Interfaces;
 
 namespace Noobsenger.Core.Ultra
 {
@@ -29,7 +31,7 @@ namespace Noobsenger.Core.Ultra
             }
         }
         public Hashtable ClientsList = new();
-        private bool IsRuns = true;
+        private bool IsRunning = true;
         public bool IsHosted { get; private set; } = false;
         public TcpListener ServerSocket;
         public int AddChannel(string channelName,bool isQuickGPT = false)
@@ -56,12 +58,11 @@ namespace Noobsenger.Core.Ultra
                 if (cnl.Host(IP, p, channelName))
                 {
                     Channels.Add(cnl);
-                    
                     BroadcastAll(new Data("" + p, "" + p, dataType: DataType.InfoMessage, infoCode: isQuickGPT ? InfoCodes.AddGPTChannel : InfoCodes.AddChannel));
                 }
                 else
                 {
-                    throw new Exception("System.Net.Sockets.SocketException Please try again!");
+                    throw new Exception("Please try again!",new SocketException());
                 }
                 return cnl.ChannelCount;
             }
@@ -70,12 +71,17 @@ namespace Noobsenger.Core.Ultra
                 throw new Exception("Server was not hosted");
             }
         }
-        public void CloseServer()
+        public void TryCloseServer()
         {
             if (IsHosted)
             {
                 BroadcastAll(new Data(dataType:DataType.InfoMessage, infoCode: InfoCodes.ServerClosed));
-                this.IsRuns = false;
+                this.IsRunning = false;
+                foreach (var item in Channels)
+                {
+                    item.IsRunning = false;
+                }
+                IsRunning = false;
             }
         }
         public void RemoveChannel(int channelCount)
@@ -85,7 +91,7 @@ namespace Noobsenger.Core.Ultra
                 if(item.ChannelCount == channelCount)
                 {
                     item.IsHosted = false;
-                    item.IsRuns = false;
+                    item.IsRunning = false;
                     BroadcastAll(new Data("" + item.Port, "" + item.Port, dataType: DataType.InfoMessage, infoCode: InfoCodes.RemoveChannel));
                     Channels.Remove(item);
                     return;
@@ -94,7 +100,7 @@ namespace Noobsenger.Core.Ultra
         }
         public void Host(IPAddress address, int port, string serverName)
         {
-            IsRuns = true;
+            IsRunning = true;
             IsHosted = true;
             ServerName = serverName;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -105,7 +111,7 @@ namespace Noobsenger.Core.Ultra
             var t = new Thread(Reciver);
             t.Start();
             var c = new UltraClient();
-            c.Connect(address, port, "GPTNoob", Avatars.OpenAI);
+            c.Connect(address, port, "Braniac", Avatars.OpenAI,Guid.NewGuid());
             var GPT3 = new GPT3(c);
 
         }
@@ -125,10 +131,11 @@ namespace Noobsenger.Core.Ultra
             }
         }
         private int ClientsCount = 0;
+        private string memb = "";
         private void Reciver()
         {
             TcpClient clientSocket = default;
-            while (IsRuns)
+            while (IsRunning)
             {
                 clientSocket = ServerSocket.AcceptTcpClient();
 
@@ -144,16 +151,16 @@ namespace Noobsenger.Core.Ultra
                     if (dataFromClient.InfoCode == InfoCodes.Join)
                     {
                         ClientsCount++;
-                        BroadcastAll(ServerName, ServerName, DataType.InfoMessage, MsgCode: InfoCodes.ServerNameReceived);
+                        memb += dataFromClient.Message + ",";
 
-                        var client = new ClientHandler(clientSocket, dataFromClient.ClientName, ClientsCount);
+                        var client = new ClientHandler(clientSocket, dataFromClient.ClientName, ClientsCount,false,dataFromClient.GUID);
                         client.Disconnected += (sender, e) =>
                         {
                             try
                             {
                                 foreach (DictionaryEntry Item in ClientsList)
                                 {
-                                    if ((int)Item.Key == ((ClientHandler)sender).ClientNumber)
+                                    if ((Guid)Item.Key == ((ClientHandler)sender).ClientId)
                                     {
                                         ClientsList.Remove(Item);
                                         return;
@@ -163,15 +170,18 @@ namespace Noobsenger.Core.Ultra
                             catch { }
                             BroadcastAll(new Data(((ClientHandler)sender).ClientName, ((ClientHandler)sender).ClientName + " Left.", dataType: DataType.InfoMessage, infoCode: InfoCodes.Left));
                         };
-                        BroadcastAll(new Data(ServerName, ServerName, dataType: DataType.InfoMessage, infoCode: InfoCodes.ServerNameReceived));
                         client.BytesRecieved += (sender, e) => BroadcastAll(e.Bytes, e.Length);
-                        ClientsList.Add(ClientsCount, clientSocket);
+                        ClientsList.Add(dataFromClient.GUID, clientSocket);
                         client.Start();
-                        var channelPorts = Channels.Select(x => x.Port);
-                        var data = new Data(message:string.Join(",",channelPorts.ToArray()), dataType: DataType.InfoMessage, infoCode: InfoCodes.AddChannels).ToBytes();
-                        var s = client.ClientSocket.GetStream();
-                        s.Write(data, 0, data.Length);
-                        s.Flush();
+
+                        var channelPorts = Channels.Select(x => x.Port.ToString());
+                        BroadcastAll(string.Join(",", channelPorts.ToArray()), ServerName, DataType.InfoMessage, MsgCode: InfoCodes.AddChannels);
+
+                    }
+                    else if (dataFromClient.InfoCode == InfoCodes.ChannelsRequest)
+                    {
+                        var channelPorts = Channels.Select(x => x.Port.ToString());
+                        BroadcastAll(string.Join(",", channelPorts.ToArray()), ServerName, DataType.InfoMessage, MsgCode: InfoCodes.AddChannels);
                     }
                 }
             }
@@ -182,17 +192,21 @@ namespace Noobsenger.Core.Ultra
         {
             foreach (DictionaryEntry Item in ClientsList)
             {
-                TcpClient broadcastSocket;
-                broadcastSocket = (TcpClient)Item.Value;
-                if (broadcastSocket.Connected)
+                try
                 {
-                    NetworkStream broadcastStream = broadcastSocket.GetStream();
-                    broadcastStream.Write(data, 0, length);
-                    broadcastStream.Flush();
+                    TcpClient broadcastSocket;
+                    broadcastSocket = (TcpClient)Item.Value;
+                    if (broadcastSocket.Connected)
+                    {
+                        NetworkStream broadcastStream = broadcastSocket.GetStream();
+                        broadcastStream.Write(data, 0, length);
+                        broadcastStream.Flush();
+                    }
                 }
+                catch { }
             }
         }
-        public void BroadcastAll(string msg, string uName, DataType type, Avatars avatar = Avatars.Gamer, Uri[] uploads = null, string MsgCode = null,object[] objs = null, int msgCount = 0)
+        public void BroadcastAll(string msg, string uName, DataType type, Avatars avatar = Avatars.Gamer, Uri[] uploads = null, string MsgCode = null,byte[] files = null, int msgCount = 0, string guid = null)
         {
             foreach (DictionaryEntry Item in ClientsList)
             {
@@ -203,20 +217,20 @@ namespace Noobsenger.Core.Ultra
                     NetworkStream broadcastStream = broadcastSocket.GetStream();
                     byte[] broadcastBytes;
 
-                    broadcastBytes = new Data(uName, msg, avatar: avatar, uploads: uploads, dataType: type, infoCode: MsgCode, count: msgCount,objects:objs).ToBytes();
+                    broadcastBytes = new Data(uName, msg, avatar: avatar, uploads: uploads, dataType: type, infoCode: MsgCode, count: msgCount,Files:files,gUID:guid).ToBytes();
 
                     broadcastStream.Write(broadcastBytes, 0, broadcastBytes.Length);
                     broadcastStream.Flush();
                 }
             }
         }
-        public void Broadcast(TcpClient broadcastSocket, string msg, string uName, DataType type, Avatars avatar = Avatars.Gamer, Uri[] uploads = null, string MsgCode = null, object[] objs = null, int msgCount = 0)
+        public void Broadcast(TcpClient broadcastSocket, string msg, string uName, DataType type, Avatars avatar = Avatars.Gamer, Uri[] uploads = null, string MsgCode = null, byte[] files = null, int msgCount = 0, string guid = null)
         {
             if (broadcastSocket.Connected)
             {
                 NetworkStream broadcastStream = broadcastSocket.GetStream();
                 byte[] broadcastBytes;
-                broadcastBytes = new Data(uName, msg, avatar: avatar, uploads: uploads, dataType: type, infoCode: MsgCode, count: msgCount, objects: objs).ToBytes();
+                broadcastBytes = new Data(uName, msg, avatar: avatar, uploads: uploads, dataType: type, infoCode: MsgCode, count: msgCount, Files: files, gUID: guid).ToBytes();
                 broadcastStream.Write(broadcastBytes, 0, broadcastBytes.Length);
                 broadcastStream.Flush();
             }

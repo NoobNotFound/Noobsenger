@@ -26,12 +26,11 @@ namespace Noobsenger.Helpers
                 var lastMsg = messages.Last();
                 if (lastMsg is MessageItem itm && msg is MessageItem mitm)
                 {
-                    if (itm.From == mitm.From)
+                    if (itm.GUID == mitm.GUID)
                     {
                         if (itm.Sender != MessageSender.Me)
-                        {
                             mitm.Sender = MessageSender.OtherAgain;
-                        }
+                        
                         return mitm;
                     }
                 }
@@ -47,6 +46,7 @@ namespace Noobsenger.Helpers
         public string Message;
         public MessageSender Sender;
         public int Count { get; set; }
+        public bool IsSentByMe => Sender == MessageSender.Me;
         public Visibility AvatarVisibility { get
             {
                 Visibility or;
@@ -91,15 +91,18 @@ namespace Noobsenger.Helpers
             }
         }
         public DateTime Time { get; set; }
+        public Guid GUID { get ; set ; }
     }
     public class InfoItem : Message
     {
         public string Info;
         public DateTime Time { get; set; }
         public int Count { get; set; }
+        public Guid GUID { get ; set ; }
     }
     public interface Message
     {
+        public Guid GUID { get; set; }
         public int Count { get; set; }
         public DateTime Time { get; set; }
     }

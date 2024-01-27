@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Noobsenger.MAUI.Pages.UltraChatPage"
+             xmlns:local="clr-namespace:Noobsenger.MAUI.Pages"
+             Title="UltraChatPage"
+             Loaded="ContentPage_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid BackgroundColor="{AppThemeBinding Light={StaticResource PrimaryDark}, Dark={StaticResource PrimaryLight}}" Padding="6" ColumnSpacing="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Entry x:Name="ServerName"  Placeholder="Server Name"/>
+            <Button x:Name="btnAdd" Clicked="btnAdd_Clicked" Grid.Column="2" Text="+"/>
+            <Button x:Name="btnInfo" Clicked="btnInfo_Clicked" Grid.Column="3" Text="i"/>
+            <FlexLayout x:Name="ChannelItems"/>
+        </Grid>
+        <ListView x:Name="lvChats">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="local:ChatPage">
+                    <ViewCell Tapped="ViewCell_Tapped">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid VerticalOptions="Center" HorizontalOptions="StartAndExpand" Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Text="{x:Binding Title,Mode=OneWay}"/>
+                                    <Label FontSize="Caption" Grid.Column="2" Text="{x:Binding Title,Mode=OneWay}"/>
+                                </Grid>
+
+                                <Label FontSize="Caption" TextColor="{StaticResource Gray500}" Grid.Row="1" Text="{Binding LastMsg,Mode=OneWay}"/>
+
+                            </Grid>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</ContentPage>

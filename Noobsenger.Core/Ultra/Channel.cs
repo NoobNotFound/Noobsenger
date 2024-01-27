@@ -10,9 +10,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Noobsenger.Core.Ultra.DataManager;
-using OpenAI_API;
-using OpenAI_API.Completions;
-using OpenAI_API.Models;
 
 namespace Noobsenger.Core.Ultra
 {
@@ -35,7 +32,7 @@ namespace Noobsenger.Core.Ultra
             }
         }
         public Hashtable TcpClientsList { get; set; } = new Hashtable();
-        public bool IsRuns = false;
+        public bool IsRunning = false;
         public bool IsHosted = false;
         public TcpListener ServerSocket;
         public Channel(int Count)
@@ -52,7 +49,7 @@ namespace Noobsenger.Core.Ultra
                 ServerSocket = new TcpListener(address, port);
                 IP = address;
                 Port = port;
-                IsRuns = true;
+                IsRunning = true;
                 ServerSocket.Start();
                 var t = new Thread(Reciver);
                 t.Start();
@@ -66,7 +63,7 @@ namespace Noobsenger.Core.Ultra
         private void Reciver()
         {
             TcpClient clientSocket = default;
-            while (IsRuns)
+            while (IsRunning)
             {
                 clientSocket = ServerSocket.AcceptTcpClient();
 
@@ -79,10 +76,11 @@ namespace Noobsenger.Core.Ultra
 
                 if (dataFromClient.DataType == DataType.InfoMessage)
                 {  
+                    
                     if (dataFromClient.InfoCode == InfoCodes.Join)
                     {
                         ClientsCount++;
-                        var client = new ClientHandler(clientSocket, dataFromClient.ClientName, ClientsCount);
+                        var client = new ClientHandler(clientSocket, dataFromClient.ClientName, ClientsCount,guid:dataFromClient.GUID);
                         client.Disconnected += (sender, e) =>
                         {
                             try
@@ -112,7 +110,8 @@ namespace Noobsenger.Core.Ultra
                         TcpClientsList.Add(ClientsCount, clientSocket);
                         ClientHandlersList.Add(client);
                         client.Start();
-                        BroadcastAll(new Data(dataFromClient.ClientName, dataFromClient.ClientName + " Joined.", dataFromClient.Avatar, new List<Uri>().ToArray(), DataType.InfoMessage, InfoCodes.Join));
+                        BroadcastAll(new Data(dataFromClient.ClientName, dataFromClient.ClientName + " Joined.", dataFromClient.Avatar, null, DataType.InfoMessage, InfoCodes.Join));
+                        Task.Delay(200).Wait();
                         BroadcastAll(new Data(ChannelName, ChannelName, dataType: DataType.InfoMessage, infoCode: InfoCodes.ServerNameReceived));
                     }
                     else if (dataFromClient.InfoCode == InfoCodes.ServerClosed)
@@ -131,7 +130,7 @@ namespace Noobsenger.Core.Ultra
 
                             }
                         }
-                        catch { } 
+                        catch { }
                     }
                 }
             }
@@ -142,15 +141,22 @@ namespace Noobsenger.Core.Ultra
         {
             foreach (DictionaryEntry Item in TcpClientsList)
             {
-                TcpClient broadcastSocket;
-                broadcastSocket = (TcpClient)Item.Value;
-                NetworkStream broadcastStream = broadcastSocket.GetStream();
-                byte[] broadcastBytes;
+                try
+                {
+                    TcpClient broadcastSocket;
+                    broadcastSocket = (TcpClient)Item.Value;
+                    if (broadcastSocket.Connected)
+                    {
+                        NetworkStream broadcastStream = broadcastSocket.GetStream();
+                        byte[] broadcastBytes;
 
-                broadcastBytes = data.ToBytes();
+                        broadcastBytes = data.ToBytes();
 
-                broadcastStream.Write(broadcastBytes, 0, broadcastBytes.Length);
-                broadcastStream.Flush();
+                        broadcastStream.Write(broadcastBytes, 0, broadcastBytes.Length);
+                        broadcastStream.Flush();
+                    }
+                }
+                catch { }
             }
         }
         public void BroadcastAll(byte[] data,int length)
@@ -173,10 +179,13 @@ namespace Noobsenger.Core.Ultra
         public event EventHandler<BytesRecievedEventArgs> BytesRecieved = delegate { };
         public event EventHandler Disconnected = delegate { };
         public int ClientNumber;
-        public bool IsRuns = true;
+        public bool IsRunning = true;
         public string ClientName;
-        public ClientHandler(TcpClient clientSocket, string clientName, int clientNumber, bool start = false)
+        public Guid ClientId;
+        public ClientHandler(TcpClient clientSocket, string clientName, int clientNumber, bool start = false,string guid = null)
         {
+            if (!Guid.TryParse(guid, out ClientId))
+                ClientId = Guid.NewGuid();
             ClientSocket = clientSocket;
             ClientName = clientName;
             ClientNumber = clientNumber;

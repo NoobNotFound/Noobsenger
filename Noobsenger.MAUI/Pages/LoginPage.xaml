@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Noobsenger.MAUI.Views.LoginPage"
+             x:Class="Noobsenger.MAUI.Pages.LoginPage"
              Title="LoginPage">
-    <VerticalStackLayout
+    <StackLayout
+        Spacing="6"
         VerticalOptions="FillAndExpand"
 			Padding="18"
-        Spacing="4"
 			HorizontalOptions="Center">
         <Label
 				FontSize="32"
@@ -32,6 +32,15 @@
 					WidthRequest="200"
 					x:Name="cmbxAvatar" />
         </HorizontalStackLayout>
-        <Image Margin="0,12,0,0" WidthRequest="150" HorizontalOptions="Center" x:Name="img"/>
-    </VerticalStackLayout>
+        <Image Margin="0,12,0,0" VerticalOptions="Center" WidthRequest="150" HorizontalOptions="Center" x:Name="img"/>
+        <StackLayout VerticalOptions="EndAndExpand" HorizontalOptions="Center" Orientation="Vertical" Spacing="6">
+            <Label FontAttributes="Bold" x:Name="txtError" TextColor="Red" IsVisible="False" />
+            <Button
+                    WidthRequest="100"
+                Text="Login"
+                Style="{StaticResource AccentButtonStyle}"
+                    Clicked="Button_Clicked"
+				HorizontalOptions="Center" />
+        </StackLayout>
+    </StackLayout>
 </ContentPage>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Noobsenger.MAUI.Pages.NewChannelPage"
+             Title="NewChannelPage">
+    <StackLayout
+    VerticalOptions="FillAndExpand"
+		Padding="18"
+    Spacing="6"
+		HorizontalOptions="Center">
+        <Label
+			FontSize="32"
+			Text="Create a new channel" />
+        <Label
+        FontSize="Default"
+			Margin="0,6"
+			Text="Add a name to the Channel. If you want to get replied by AI every messae you sends toggle Quick GPT on." />
+        <StackLayout Orientation="Horizontal">
+            <Label
+        FontSize="Default"
+				Text="Name "
+				WidthRequest="100"
+				VerticalOptions="Center" />
+            <Entry
+				MinimumWidthRequest="200"
+				x:Name="txtName" />
+        </StackLayout>
+        <StackLayout
+			Orientation="Horizontal">
+            <Label
+        FontSize="Default"
+				Text="Quick GPT"
+				VerticalOptions="Center"
+				WidthRequest="100" />
+            <Switch
+                x:Name="GPTswitch" />
+        </StackLayout>
+        <Label Margin="0,6,0,0" FontSize="Caption" x:Name="txtInfo" TextColor="Red" IsVisible="False" />
+        <StackLayout VerticalOptions="EndAndExpand" HorizontalOptions="Center" Orientation="Vertical" Spacing="6">
+            <Label FontAttributes="Bold" x:Name="txtError" TextColor="Red" IsVisible="False" />
+            <StackLayout Spacing="8" Orientation="Horizontal" >
+                <Button
+            Text="Back"
+                WidthRequest="100"
+                    Clicked="Button_Clicked_1"
+			HorizontalOptions="Center" />
+                <Button
+                WidthRequest="100"
+            Text="Create"
+            Style="{StaticResource AccentButtonStyle}"
+                    Clicked="Button_Clicked"
+			HorizontalOptions="Center" />
+            </StackLayout>
+        </StackLayout>
+    </StackLayout>
+</ContentPage>

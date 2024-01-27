@@ -24,6 +24,11 @@ namespace Noobsenger.Core
         public static string ChannelClosed { get; set; } = "IC8";
         public static string ImgFromWeb { get; set; } = "IC9";
         public static string AddGPTChannel { get; set; } = "IC10";
+        public static string Thinking { get; set; } = "IC11";
+        public static string NotThinking { get; set; } = "IC12";
+        public static string MembersUpdated { get; set; } = "IC13";
+        public static string MessageDelete { get; set; } = "IC14";
+        public static string ChannelsRequest { get; set; } = "IC15";
     }
 
     public enum Avatars
@@ -72,6 +77,7 @@ namespace Noobsenger.Core
             }
         }
     }
+    [Obsolete]
     public static class Server
     {
         public static IPAddress IP;
@@ -88,7 +94,7 @@ namespace Noobsenger.Core
             }
         }
         public static Hashtable ClientsList = new();
-        public static bool IsRuns = true;
+        public static bool IsRunning = true;
         public static bool IsHosted = false;
         public static TcpListener ServerSocket;
         public static void Host(IPAddress address, int port, string serverName)
@@ -106,7 +112,7 @@ namespace Noobsenger.Core
         private static void Reciver()
         {
             TcpClient clientSocket = default;
-            while (IsRuns)
+            while (IsRunning)
             {
                 clientSocket = ServerSocket.AcceptTcpClient();
 
@@ -161,7 +167,7 @@ namespace Noobsenger.Core
         {
             public TcpClient ClientSocket;
             private string clNo;
-            public bool IsRuns = true;
+            public bool IsRunning = true;
 
             public void StartClient(TcpClient inClientSocket, string clineNo)
             {
@@ -175,7 +181,7 @@ namespace Noobsenger.Core
             {
                 byte[] bytesFrom = new byte[10025];
 
-                while (IsRuns)
+                while (IsRunning)
                 {
                     try
                     {
@@ -202,6 +208,7 @@ namespace Noobsenger.Core
             //end doChat
         }
     }
+    [Obsolete]
     public class Client : IClient
     {
         public event EventHandler<IData> ChatRecieved = delegate { };
@@ -211,9 +218,12 @@ namespace Noobsenger.Core
         public string UserName { get; set; }
         public Avatars Avatar { get; set; }
         public string ServerName { get; set; }
-        public async void Connect(IPAddress ip, int port, string userName, Avatars avatar)
+        public Guid GUID { get; set; }
+
+        public async void Connect(IPAddress ip, int port, string userName, Avatars avatar,Guid guid)
         {
            await clientSocket.ConnectAsync(ip, port);
+            GUID = guid;
             serverStream = clientSocket.GetStream();
             this.UserName = userName;
             this.Avatar = avatar;

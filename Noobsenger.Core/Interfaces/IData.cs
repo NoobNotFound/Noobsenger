@@ -10,8 +10,10 @@ namespace Noobsenger.Core.Interfaces
         string ClientName { get; set; }
         string Message { get; set; }
         string InfoCode { get; set; }
+        string GUID { get; set; }
         Avatars Avatar { get; set; }
         Uri[] Uploads { get; set; }
         DataType DataType { get; set; }
+        byte[] Files { get; set; }
     }
 }

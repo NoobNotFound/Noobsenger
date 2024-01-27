@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Noobsenger.Core.Ultra.DataManager;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Collections.ObjectModel;
 
 namespace Noobsenger.Core.Ultra
 {
@@ -26,8 +27,11 @@ namespace Noobsenger.Core.Ultra
         public Avatars Avatar { get; set; }
         public string ServerName { get; set; }
         public IPAddress IP { get; private set; }
-        public async void Connect(IPAddress ip, int port, string userName, Avatars avatar)
+
+        public Guid GUID { get; set; }
+        public async void Connect(IPAddress ip, int port, string userName, Avatars avatar, Guid guid)
         {
+            GUID = guid;
             IP = ip;
             await clientSocket.ConnectAsync(ip, port);
             serverStream = clientSocket.GetStream();
@@ -37,12 +41,18 @@ namespace Noobsenger.Core.Ultra
             var ctThread = new Thread(GetMessage);
 
             ctThread.Start();
-            byte[] outStream = DataEncoder.DataToByteArray(new ChatData(UserName, UserName, avatar, null, DataType.InfoMessage, InfoCodes.Join));
+            await SendMessage(new Data(UserName, UserName, avatar, null, DataType.InfoMessage, InfoCodes.Join, gUID: GUID.ToString()));
+            await Task.Delay(200);
+            await SendMessage(new Data(UserName, UserName, avatar, null, DataType.InfoMessage, InfoCodes.ChannelsRequest, gUID: GUID.ToString()));
 
-            serverStream.Write(outStream, 0, outStream.Length);
-            serverStream.Flush();
-            await serverStream.FlushAsync();
-
+        }
+        public void Disconnect()
+        {
+            foreach (var channel in Channels)
+            {
+                clientSocket.Close();
+            }
+            clientSocket.Close();
         }
         private void GetMessage()
         {
@@ -86,14 +96,14 @@ namespace Noobsenger.Core.Ultra
                         else if (returndata.InfoCode == InfoCodes.AddChannel)
                         {
                             var c = new ChannelClient();
-                            c.Connect(IP, int.Parse(returndata.Message), UserName, Avatar);
+                            c.Connect(IP, int.Parse(returndata.Message), UserName, Avatar, GUID);
                             Channels.Add(c);
                             ChannelAdded(this, c.Port);
                         }
                         else if (returndata.InfoCode == InfoCodes.AddGPTChannel)
                         {
                             var c = new ChannelClient() { QuickGPT = true };
-                            c.Connect(IP, int.Parse(returndata.Message), UserName, Avatar);
+                            c.Connect(IP, int.Parse(returndata.Message), UserName, Avatar, GUID);
                             Channels.Add(c);
                             ChannelAdded(this, c.Port);
                         }
@@ -117,15 +127,18 @@ namespace Noobsenger.Core.Ultra
                         }
                         else if (returndata.InfoCode == InfoCodes.AddChannels)
                         {
-                            var chnls = returndata.Message.Split(':'); 
+                            var chnls = returndata.Message.Split(','); 
                             foreach (var item in chnls)
                             {
                                 if (int.TryParse(item,out var x))
                                 {
-                                    var c = new ChannelClient();
-                                    c.Connect(IP, x, UserName, Avatar);
-                                    Channels.Add(c);
-                                    ChannelAdded(this, c.Port);
+                                    if (!Channels.Any(y => y.Port == x))
+                                    {
+                                        var c = new ChannelClient();
+                                        c.Connect(IP, x, UserName, Avatar, GUID);
+                                        Channels.Add(c);
+                                        ChannelAdded(this, c.Port);
+                                    }
                                 }
                             }
                         }
@@ -182,8 +195,11 @@ namespace Noobsenger.Core.Ultra
         public string ChannelName { get; set; }
         public int Port;
         public IPAddress IP;
-        public async void Connect(IPAddress ip, int port, string userName, Avatars avatar)
+        public ObservableCollection<(string Nme, Guid GUID)> ThinkingGuys { get; private set; } = new();
+        public Guid GUID { get; set; }
+        public async void Connect(IPAddress ip, int port, string userName, Avatars avatar, Guid guid)
         {
+            GUID = guid;
             IP = ip;
             Port = port;
             await clientSocket.ConnectAsync(ip, port);
@@ -194,7 +210,7 @@ namespace Noobsenger.Core.Ultra
             var ctThread = new Thread(GetMessage);
 
             ctThread.Start();
-            byte[] outStream = DataEncoder.DataToByteArray(new ChatData(UserName, UserName, avatar, null, DataType.InfoMessage, InfoCodes.Join));
+            byte[] outStream = new Data(UserName, UserName, avatar, null, DataType.InfoMessage, InfoCodes.Join,gUID:guid.ToString()).ToBytes();
 
             serverStream.Write(outStream, 0, outStream.Length);
             serverStream.Flush();
@@ -212,12 +228,24 @@ namespace Noobsenger.Core.Ultra
             }
             else
             {
-                byte[] outStream = ((Data)data).ToBytes();
+                var dt = ((Data)data);
+                dt.GUID = GUID.ToString();
+                byte[] outStream = dt.ToBytes();
                 await serverStream.WriteAsync(outStream, 0, outStream.Length);
                 serverStream.Flush();
                 await serverStream.FlushAsync();
             }
         }
+        private bool IsThinking = false;
+        public async Task Thinking(bool value) 
+        {
+            if (value != IsThinking)
+            {
+                IsThinking = value;
+                await SendMessage(new Data(this.UserName, gUID: GUID.ToString(), dataType: DataType.InfoMessage, infoCode: value ? InfoCodes.Thinking : InfoCodes.NotThinking));
+            }
+        }
+        
         private void GetMessage()
         {
             while (clientSocket.Connected)
@@ -253,9 +281,30 @@ namespace Noobsenger.Core.Ultra
                         {
                             ChatRecieved.Invoke(returndata.ClientName, returndata);
                         }
+
                         else if (returndata.InfoCode == InfoCodes.Left)
                         {
                             ChatRecieved.Invoke(returndata.ClientName, returndata);
+                        }
+                        else if (returndata.InfoCode == InfoCodes.MessageDelete)
+                        {
+                            ChatRecieved.Invoke(returndata.ClientName, returndata);
+                        }
+                        else if (returndata.InfoCode == InfoCodes.Thinking)
+                        {
+                            if (Guid.TryParse(returndata.GUID, out var guid))
+                                if (!ThinkingGuys.Any(x => x.GUID == guid) && guid != GUID)
+                                    ThinkingGuys.Add((returndata.ClientName, guid));
+                        }
+                        else if (returndata.InfoCode == InfoCodes.NotThinking)
+                        {
+
+                            if (Guid.TryParse(returndata.GUID, out var guid))
+                            {
+                                var r = ThinkingGuys.Where(x => x.GUID == guid).ToList();
+                                foreach (var i in r)
+                                    ThinkingGuys.Remove(i);
+                            }
                         }
                     }
                 }
